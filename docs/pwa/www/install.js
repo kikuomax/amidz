@@ -11,6 +11,7 @@ window.addEventListener('appinstalled', event => {
 
 function saveBeforeInstallPromptEvent (event) {
   console.log('Showing install button')
+  event.preventDefault()
   deferredInstallPrompt = event
   installButton.removeAttribute('hidden')
 }
