@@ -7,7 +7,7 @@ const CORE_CACHE_NAME = 'amidz-core-cache-v1'
 const DATA_CACHE_NAME = 'amidz-data-cache-v1'
 
 // DO NOT FORGET to change `CORE_CACHE_NAME`
-// when `CORE_FILES_TO_CACHE` is modified.
+// whenever files listed in `CORE_FILES_TO_CACHE` are modified.
 const CORE_FILES_TO_CACHE = [
   '/',
   '/index.html',
@@ -30,16 +30,14 @@ self.addEventListener('fetch', event => {
   if (event.request.url.includes(DATA_SEGMENT)) {
     // data resources should be obtained from the network
     // as long as it is connected.
-    console.log('[Service Worker] Fetch (data)', event.request.rul)
+    console.log('[Service Worker] Fetch (data)', event.request.url)
     event.respondWith(
       caches.open(DATA_CACHE_NAME)
         .then(cache => {
           return fetch(event.request)
             .then(response => {
               if (response.status === 200) {
-                if (event.request.url.includes('message.json')
-                    && !event.request.url.includes('localhost'))
-                {
+                if (event.request.url.includes('message.json')) {
                   // dynamically generates a message
                   // if it is hosted on GitHub Pages
                   const data = {
@@ -62,6 +60,7 @@ self.addEventListener('fetch', event => {
               return response
             })
             .catch(() => {
+              console.log('[Service Worker] Fetching cached data')
               return cache.match(event.request)
             })
         })
@@ -76,6 +75,11 @@ self.addEventListener('fetch', event => {
                 return response
               } else {
                 return fetch(event.request)
+                  .catch(err => {
+                    console.error(
+                      '[Service Worker] Failed to fetch',
+                      event.request.url)
+                  })
               }
             })
         })
