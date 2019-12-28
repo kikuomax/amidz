@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8">
     <meta name="description" content="A knitting chart editor">
@@ -18,10 +18,31 @@
           id="show-message"
           type="button"
         >
-          Show message
+          ¿Qué hora es?
         </button>
+        <span id="message">
+        </span>
       </p>
-      <p id="message">
+      <p>
+        Every time you click the <span class="emphasized">¿Qué hora es?</span>
+        button, it shows the current time stamp as long as you are online.
+        Clicking the <span class="emphasized">¿Qué hora es?</span> button
+        offline shows the last (cached) time stamp.
+        But because of the <span class="emphasized">Cache-Control</span>
+        configuration of GitHub Pages it continues updating the current time
+        stamp for <span class="emphasized">600</span> seconds after you go
+        offline.
+      </p>
+    </div>
+    <div>
+      <p>
+        <button
+          id="install-pwa"
+          type="button"
+          hidden
+        >
+          Install Amidz
+        </button>
       </p>
     </div>
     <script>
@@ -41,7 +62,12 @@
         })
       }
     </script>
-    <script src="./app.js">
-    </script>
+    <script src="./app.js"></script>
+    <script src="./install.js"></script>
+    <style>
+      span.emphasized {
+        font-weight: bold;
+      }
+    </style>
   </body>
 </html>

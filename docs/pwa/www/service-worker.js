@@ -3,7 +3,7 @@
 const BASE_PATH = '.'
 const DATA_SEGMENT = `/data/`
 
-const CORE_CACHE_NAME = 'amidz-core-cache-v1'
+const CORE_CACHE_NAME = 'amidz-core-cache-v2'
 const DATA_CACHE_NAME = 'amidz-data-cache-v1'
 
 // DO NOT FORGET to change `CORE_CACHE_NAME`
@@ -12,6 +12,7 @@ const CORE_FILES_TO_CACHE = [
   '/',
   '/index.html',
   '/app.js',
+  '/install.js',
   '/images/icons/favicon.png'
 ].map(p => `${BASE_PATH}${p}`)
 
