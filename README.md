@@ -11,6 +11,10 @@ A knitting chart editor.
 The GitHub Page of this repository delivers a [prototype application](https://kikuomax.github.io/amidz/).
 The prototype application is a Progressive Web App (PWA).
 
+### Usage scenarios
+
+Please refer to [scenarios.md](scenarios.md).
+
 ### Locally testing the prototype application
 
 The prototype application can be locally tested.
