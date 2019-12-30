@@ -1,3 +1,5 @@
+[English](scenarios.md)/日本語
+
 # 利用シナリオ
 
 ## Amidzの機能概要

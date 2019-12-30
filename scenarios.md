@@ -1,3 +1,5 @@
+English/[日本語](scenarios_ja.md)
+
 # Usage Scenarios
 
 ## Overview of Amidz features
