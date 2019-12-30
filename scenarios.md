@@ -122,7 +122,7 @@ English/[日本語](scenarios_ja.md)
 
 ### Main
 
-1. [Starting application](#amidz_s001-starting-application)
+1. [Starting application](#amidz_s001-starting-the-application)
     - Screen: `Pattern layout screen`
 2. A `designer` is editing a `pattern chart` in a `project`.
 3. The `designer` presses a `download SVG button`.
