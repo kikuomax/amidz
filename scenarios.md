@@ -70,7 +70,7 @@ English/[日本語](scenarios_ja.md)
 
 ### Main
 
-1. [Displaying a pattern layout](#amidz_005-displaying-a-pattern-layout)
+1. [Displaying a pattern layout](#amidz_s005-displaying-a-pattern-layout)
     - Screen: `Pattern layout screen`
 2. A `designer` is editing the `pattern layout` of a `project`.
 3. `Amidz` displays the `pattern chart list` of the `project` to the `designer`.
@@ -82,7 +82,7 @@ English/[日本語](scenarios_ja.md)
 
 ### Main
 
-1. [Displaying a pattern layout](#amidz_005-displaying-a-pattern-layout)
+1. [Displaying a pattern layout](#amidz_s005-displaying-a-pattern-layout)
     - Screen: `Pattern layout screen`
 2. A `designer` is editing the `pattern layout` of a `project`.
 3. The `designer` selects a `pattern chart` on the `pattern layout` that is being edit.
@@ -95,7 +95,7 @@ English/[日本語](scenarios_ja.md)
 
 ### Main
 
-1. [Displaying a pattern layout](#amidz_005-displaying-a-pattern-layout)
+1. [Displaying a pattern layout](#amidz_s005-displaying-a-pattern-layout)
     - Screen: `Pattern layout screen`
 2. A `designer` is editing the `pattern layout` of a `project`.
 3. The `designer` selects a `pattern chart` on the `pattern layout` that is being edited.
@@ -108,7 +108,7 @@ English/[日本語](scenarios_ja.md)
 
 ### Main
 
-1. [Displaying a pattern layout](#amidz_005-displaying-a-pattern-layout)
+1. [Displaying a pattern layout](#amidz_s005-displaying-a-pattern-layout)
     - Screen: `Pattern layout screen`
 2. A `designer` is editing the `pattern layout` of a `project`.
 3. The `designer` selects a `pattern chart` on the `pattern layout` that is being edited.
