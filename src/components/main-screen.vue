@@ -2,10 +2,21 @@
   <div>
     <h1>Main Screen</h1>
     <div>
-      <svg ref="root-svg" xmlns="http://www.w3.org/2000/svg">
+      <svg
+        ref="root-svg"
+        xmlns="http://www.w3.org/2000/svg"
+      >
         <defs ref="svg-defs" />
-        <use href="#loaded-image" x="10" y="10" />
-        <use href="#loaded-image" x="30" y="60" />
+        <use
+          href="#loaded-image"
+          x="10"
+          y="10"
+        />
+        <use
+          href="#loaded-image"
+          x="30"
+          y="60"
+        />
       </svg>
     </div>
   </div>
