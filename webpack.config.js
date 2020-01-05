@@ -1,4 +1,5 @@
 const path = require('path')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
 
@@ -51,6 +52,13 @@ module.exports = {
     new HtmlWebpackPlugin({
       title: 'Amidz',
       template: './src/index.ejs'
-    })
+    }),
+    new CopyWebpackPlugin([
+      {
+        from: 'symbols/*.svg',
+        to: '',
+        context: path.resolve(__dirname, 'src')
+      }
+    ])
   ]
 }
