@@ -1,3 +1,6 @@
+# dist directory contains build outcomes
+/dist
+
 # Node related
 node_modules
 
