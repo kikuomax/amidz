@@ -1,6 +1,9 @@
 import Vue from 'vue'
+import Buefy from 'buefy'
 
-import 'bulma/css/bulma.css'
+import 'buefy/dist/buefy.css'
+
+Vue.use(Buefy)
 
 import router from '@route'
 

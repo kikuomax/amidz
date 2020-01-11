@@ -28,6 +28,7 @@
   },
   "homepage": "https://github.com/kikuomax/amidz#readme",
   "devDependencies": {
+    "buefy": "^0.8.9",
     "bulma": "^0.8.0",
     "copy-webpack-plugin": "^5.1.1",
     "css-loader": "^3.4.1",
