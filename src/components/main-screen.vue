@@ -30,6 +30,7 @@
 <script>
 import Grid from '@components/grid'
 
+/* global process */
 export default {
   name: 'MainScreen',
   components: {
@@ -61,10 +62,12 @@ export default {
           this.revokeSvgUrl()
           this.svgDownloadUrl = window.URL.createObjectURL(svgData)
         })
-        .catch(err => console.error(err))
+        .catch(err => console.error('[MainScreen]', err))
     },
     downloadSvg () {
-      console.log('downloading SVG')
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('[MainScreen]', 'downloading SVG')
+      }
     },
     // revokes the object URL for an SVG image.
     revokeSvgUrl () {
