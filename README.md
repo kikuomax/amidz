@@ -2,7 +2,7 @@ English/[日本語](README_ja.md)
 
 # Amidz
 
-A knitting chart editor.
+A knitting and crochet pattern editor.
 
 <img src="imgs/logo.svg" width="256"></img>
 
@@ -28,7 +28,7 @@ Please take the following steps to start the server.
     cd docs/pwa
     ```
 
-2. Install necessary modules.
+2. Install necessary modules (first time only).
 
     ```
     npm install
@@ -44,3 +44,58 @@ Please take the following steps to start the server.
    It will show a screen similar to the following,
 
    ![Sample Screen](imgs/sample-screen.png)
+
+### Deploying a prototype application
+
+The [`docs/pwa/www`](/docs/pwa/www) directory contains the latest prototype application files.
+Those files can be built from the source files in the [`src`](/src) directory with [Webpack](https://webpack.js.org).
+If you want to build a new application from the source files and deploy it, please take the following steps,
+
+1. Suppose you are in the root directory of your copy of this repository.
+
+2. Install necessary modules (first time only).
+
+    ```
+    npm install
+    ```
+
+3. Build an application.
+
+    ```
+    npm run build
+    ```
+
+4. You will find application files in a `dist` directory.
+
+5. Replace the contents of the [`docs/pwa/www`](/docs/pwa/www) direcotry with those of the `dist` directory.
+
+    ```
+    rm -rf docs/pwa/www
+    cp -r dist docs/pwa/www
+    ```
+
+Now you can run your application as described in the section [Locally testing the prototype application](#locally-testing-the-prototype-application).
+
+### Debugging a prototype application
+
+Before deploying your application, you should want to debug it.
+Copying artifacts to the [`docs/pwa/www`](/docs/pwa/www) directory every time you build an application is cumbersome, so you can use a [Wabpack Dev Server](https://webpack.js.org/configuration/dev-server/) during you debug your application.
+To start a Webpack Dev Server, please take the following steps,
+
+1. Suppose you are in the root directory of your copy of this repository.
+
+2. Install necessary modules (first time only).
+
+    ```
+    npm install
+    ```
+
+3. Start a Webpack Dev Server.
+
+    ```
+    npm run dev
+    ```
+
+4. Your default browser will open http://localhost:8080.
+
+As a Webpack Dev Server monitors changes on source files and will automatically reload a rebuilt application, you do not need to manually reload the application when you edit a source file.

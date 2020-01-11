@@ -2,72 +2,29 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <meta name="description" content="A knitting chart editor">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#FF9955">
     <link rel="manifest" href="./manifest.json">
-    <link rel="icon" href="./images/icons/favicon.png">
-    <link rel="apple-touch-icon" href="./images/icons/icon-152x152.png">
-    <title>Amidz PWA</title>
+    <meta name="description" content="Amidz Pattern Chart Editor">
+    <meta name="theme-color" content="#FF9955">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Amidz PWA">
+    <link rel="apple-touch-icon" href="./assets/icons/icon-152x152.png">
+    <link rel="icon" type="image/png" href="./assets/icons/favicon.png">
+    <title>Amidz</title>
   </head>
   <body>
-    <div>
-      <h1>Amidz PWA</h1>
-      <p>
-        <button
-          id="show-message"
-          type="button"
-        >
-          ¿Qué hora es?
-        </button>
-        <span id="message">
-        </span>
-      </p>
-      <p>
-        Every time you click the <span class="emphasized">¿Qué hora es?</span>
-        button, it shows the current time stamp as long as you are online.
-        Clicking the <span class="emphasized">¿Qué hora es?</span> button
-        offline shows the last (cached) time stamp.
-        But because of the <span class="emphasized">Cache-Control</span>
-        configuration of GitHub Pages it continues updating the current time
-        stamp for <span class="emphasized">600</span> seconds after you go
-        offline.
-      </p>
-    </div>
-    <div>
-      <p>
-        <button
-          id="install-pwa"
-          type="button"
-          hidden
-        >
-          Install Amidz
-        </button>
-      </p>
-    </div>
+    <div id="app"></div>
     <script>
-      const BASE_PATH = '.'
-      const WORKER_SCRIPT_PATH = `${BASE_PATH}/service-worker.js`
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-          navigator.serviceWorker.register(WORKER_SCRIPT_PATH)
+          navigator.serviceWorker.register('./service-worker.js')
             .then(registration => {
-              console.log(
-                'ServiceWorker registration successful with scope: ',
-                registration.scope)
+              console.log('ServiceWorker registration', registration)
             })
-            .catch(err => {
-              console.error(err)
-            })
+            .catch(err => console.error('ServiceWorker registration', err))
         })
       }
     </script>
-    <script src="./app.js"></script>
-    <script src="./install.js"></script>
-    <style>
-      span.emphasized {
-        font-weight: bold;
-      }
-    </style>
-  </body>
+  <script type="text/javascript" src="main.js"></script></body>
 </html>

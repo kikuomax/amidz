@@ -14,6 +14,7 @@
 <script>
 import * as d3 from 'd3'
 
+/* global process */
 export default {
   name: 'Grid',
   mounted () {
@@ -51,7 +52,9 @@ export default {
     svg.on('click', function () {
       const gridX = Math.floor(d3.event.offsetX / GRID_WIDTH)
       const gridY = Math.floor(d3.event.offsetY / GRID_HEIGHT)
-      console.log('[Grid]', 'clicked', gridX, gridY)
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('[Grid]', 'clicked', gridX, gridY)
+      }
       const symbolId = (clickCount & 1) ? 'test-symbol' : 'test-symbol2'
       svg.append('use')
         .attr('xlink:href', `#${symbolId}`)
