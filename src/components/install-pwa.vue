@@ -29,13 +29,14 @@ export default {
   },
   mounted () {
     this.beforeInstallPromptCallback = event => {
-      // prevents the default install prompt popping up.
       if (process.env.NODE_ENV !== 'production') {
         console.log('[Install]', event)
       }
+      // prevents the default install prompt popping up.
       event.preventDefault()
       this.deferredInstallPrompt = event
       this.isInstallable = true
+      this.notifyInstallable()
     }
     window.addEventListener(
       'beforeinstallprompt',
@@ -47,6 +48,15 @@ export default {
       this.beforeInstallPromptCallback)
   },
   methods: {
+    notifyInstallable () {
+      this.$buefy.snackbar.open({
+        message: 'Amidz can be installed as an App',
+        type: 'is-info',
+        position: 'is-bottom',
+        actionText: 'Install',
+        onAction: () => this.installPwa()
+      })
+    },
     installPwa () {
       this.deferredInstallPrompt.prompt()
       this.isInstallable = false
