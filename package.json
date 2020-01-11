@@ -1,7 +1,7 @@
 {
   "name": "amidz",
   "version": "0.1.0",
-  "description": "Knitting and crocheting chart editor",
+  "description": "Knitting and crochet pattern editor",
   "main": "index.js",
   "directories": {
     "doc": "docs"
