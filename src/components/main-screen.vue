@@ -20,30 +20,24 @@
         Download SVG
       </a>
     </div>
-    <grid
-      ref="grid"
-      @grid-mounted="onGridMounted"
+    <router-view
+      @editor-ready="onEditorReady"
     />
   </div>
 </template>
 
 <script>
-import Grid from '@components/grid'
-
 /* global process */
 export default {
   name: 'MainScreen',
-  components: {
-    Grid
-  },
   data () {
     return {
       svgDownloadUrl: '#',
       svgDownloadName: 'pattern-chart.svg',
-      // valid function is given when `grid.vue` becomes ready.
-      // `this` context should be bound to `grid.vue`.
+      // valid function is given when `router-view` becomes ready.
+      // `this` context should be bound to `router-view`.
       requestSvgText: function () {
-        return Promise.reject(new Error('grid.vue is not ready'))
+        return Promise.reject(new Error('editor is not ready'))
       }
     }
   },
@@ -51,7 +45,7 @@ export default {
     this.revokeSvgUrl()
   },
   methods: {
-    onGridMounted ({ requestSvgText }) {
+    onEditorReady ({ requestSvgText }) {
       this.requestSvgText = requestSvgText
     },
     saveSvg () {
