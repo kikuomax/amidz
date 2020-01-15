@@ -1,46 +1,50 @@
 <template>
   <g>
-    <g
+    <pattern-row
       v-for="(row, rowIndex) in patternData.rows"
       :key="rowIndex"
-      :transform="rowTransform(row, rowIndex)"
-    >
-      <use
-        v-for="(column, colIndex) in row.columns"
-        :key="colIndex"
-        :href="referenceSymbolId(column)"
-        :x="colIndex * 30"
-        y="0"
-        width="30"
-        height="30"
-      />
-    </g>
+      :row="row"
+      :transform="rowTransform(rowIndex)"
+      :row-height="rowHeight"
+      :is-edited="rowIndex === editedRowIndex"
+    />
   </g>
 </template>
 
 <script>
-import {
-  mapActions,
-  mapState
-} from 'vuex'
+import { mapState } from 'vuex'
+
+import PatternRow from '@components/pattern-row'
 
 export default {
   name: 'PatternEditor',
+  components: {
+    PatternRow
+  },
+  props: {
+    columnWidth: {
+      type: Number,
+      default: 50
+    },
+    rowHeight: {
+      type: Number,
+      default: 50
+    }
+  },
+  data () {
+    return {
+      editedRowIndex: 0
+    }
+  },
   computed: {
     ...mapState('pattern', [
       'patternData'
     ])
   },
   methods: {
-    ...mapActions('symbols', [
-      'requestSymbol'
-    ]),
-    rowTransform (_, rowIndex) {
-      return `translate(0, ${rowIndex * 30})`
-    },
-    referenceSymbolId ({ symbolId }) {
-      this.requestSymbol({ symbolId })
-      return `#${symbolId}`
+    rowTransform (rowIndex) {
+      const totalHeight = this.rowHeight * this.patternData.rows.length
+      return `translate(0, ${totalHeight - ((rowIndex + 1) * this.rowHeight)})`
     }
   }
 }

@@ -14,10 +14,10 @@
  *   Data of the pattern currently being edited.
  *   Has the following fields,
  *     - `rows`: {`array<object>`}
- *       Rows of the pattern currently being edited.
+ *       Rows, bottom to top, of the pattern currently being edited.
  *       Each element is an object with the following fields,
  *         - `columns`: {`array<object>`}
- *           Columns of the row.
+ *           Columns, left to right, of the row.
  *           Each element is an object with the following fields,
  *             - `symbolId`: {`string`}
  *               ID of the symbol associated with the column.
