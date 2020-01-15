@@ -22,6 +22,13 @@ export default {
     SymbolRegistry
   },
   mounted () {
+    // programatically appends a style definition
+    // because <template> does not allows a <style> tag inside.
+    const svg = this.$refs['container-root']
+    const style = document.createElement('style')
+    style.innerHTML = '.selection-grid{fill:white;fill-opacity:0.0;stroke:red;stroke-width:1.0;}'
+    svg.appendChild(style)
+    // notifies the outer controller.
     this.$emit('editor-ready', {
       requestSvgText: () => this.exportSvgText()
     })

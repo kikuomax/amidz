@@ -39,6 +39,15 @@ const state = {
           },
           {
             symbolId: 'test-symbol2'
+          },
+          {
+            symbolId: 'blank-symbol'
+          },
+          {
+            symbolId: 'blank-symbol'
+          },
+          {
+            symbolId: 'blank-symbol'
           }
         ]
       },

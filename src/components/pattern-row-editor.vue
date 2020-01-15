@@ -1,18 +1,26 @@
 <template>
   <g>
     <rect
+      ref="bounding-box"
+      class="selection-grid"
       x="0"
       y="0"
       width="300"
       :height="rowHeight"
-      stroke="red"
-      stroke-width="1.0"
-      fill="white"
-      fill-opacity="0.0"
+      @click="onBoundingBoxClicked"
+    />
+    <line
+      v-for="colIndex in (row.columns.length - 1)"
+      :key="`grid-${colIndex}`"
+      class="selection-grid"
+      :x1="colIndex * columnWidth"
+      :x2="colIndex * columnWidth"
+      y1="0"
+      :y2="rowHeight"
     />
     <use
       v-for="(column, colIndex) in row.columns"
-      :key="colIndex"
+      :key="`symbol-${colIndex}`"
       :href="referenceSymbolId(column)"
       :x="colIndex * columnWidth"
       y="0"
@@ -41,6 +49,13 @@ export default {
     referenceSymbolId: {
       type: Function,
       required: true
+    }
+  },
+  methods: {
+    onBoundingBoxClicked (event) {
+      const { left, top } = this.$refs['bounding-box'].getBoundingClientRect()
+      console.log('[PatternRowEditor] client', event.clientX, event.clientY)
+      console.log('[PatternRowEditor] relative', event.clientX - left, event.clientY - top)
     }
   }
 }
