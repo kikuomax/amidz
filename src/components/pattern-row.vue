@@ -1,6 +1,4 @@
 <script>
-import { mapActions } from 'vuex'
-
 import PatternRowEditor from '@components/pattern-row-editor'
 import PatternRowRenderer from '@components/pattern-row-renderer'
 
@@ -9,10 +7,6 @@ export default {
   props: {
     row: {
       type: Object,
-      required: true
-    },
-    transform: {
-      type: String,
       required: true
     },
     columnWidth: {
@@ -25,16 +19,7 @@ export default {
     },
     isEdited: {
       type: Boolean,
-      required: true
-    }
-  },
-  methods: {
-    ...mapActions('symbols', [
-      'requestSymbol'
-    ]),
-    referenceSymbolId ({ symbolId }) {
-      this.requestSymbol({ symbolId })
-      return `#${symbolId}`
+      default: false
     }
   },
   // uses render instead of template.
@@ -44,21 +29,17 @@ export default {
     const component = this.isEdited ? PatternRowEditor : PatternRowRenderer
     const {
       row,
-      transform,
       columnWidth,
       rowHeight
-    } = this
-    const referenceSymbolId = column => this.referenceSymbolId(column)
+    } = this.$props
     return createElement(component, {
-      attrs: {
-        transform
-      },
+      attrs: this.$attrs,
       props: {
         row,
         columnWidth,
-        rowHeight,
-        referenceSymbolId
-      }
+        rowHeight
+      },
+      on: this.$listeners
     })
   }
 }

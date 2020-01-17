@@ -1,9 +1,9 @@
 <template>
   <g>
     <use
-      v-for="(column, colIndex) in row.columns"
+      v-for="(column, colIndex) in columns"
       :key="colIndex"
-      :href="referenceSymbolId(column)"
+      :href="referenceSymbol(column)"
       :x="colIndex * columnWidth"
       y="0"
       :width="columnWidth"
@@ -13,8 +13,13 @@
 </template>
 
 <script>
+import symbolUser from '@components/mixins/symbol-user'
+
 export default {
   name: 'PatternRowRenderer',
+  mixins: [
+    symbolUser
+  ],
   props: {
     row: {
       type: Object,
@@ -27,10 +32,11 @@ export default {
     rowHeight: {
       type: Number,
       required: true
-    },
-    referenceSymbolId: {
-      type: Function,
-      required: true
+    }
+  },
+  computed: {
+    columns () {
+      return this.row.columns
     }
   }
 }

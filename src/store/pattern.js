@@ -64,7 +64,35 @@ const state = {
 
 const getters = {}
 
-const mutations = {}
+/**
+ * `Mutations` of the current pattern.
+ *
+ * The follwoing field is defined,
+ * - `setSymbolAt`: {`function`}
+ *   Sets the symbol of a specified cell to a given symbol.
+ *   Takes an object that has the following fields,
+ *     - `rowIndex`: {`number`}
+ *       Row index of the cell to be replaced.
+ *     - `columnIndex`: {`number`}
+ *       Column index of the cell to be replaced.
+ *     - `symbol`: {`object`}
+ *       Symbol to set.
+ *       Has the following field,
+ *         - `symbolId`: {`string`}
+ *           ID of the symbol to set.
+ *
+ * @member {object} mutations
+ *
+ * @memberof module:store/pattern
+ */
+const mutations = {
+  setSymbolAt (state, { rowIndex, columnIndex, symbol }) {
+    const { patternData } = state
+    const { rows } = patternData
+    const { columns } = rows[rowIndex]
+    columns[columnIndex].symbolId = symbol.symbolId
+  }
+}
 
 const actions = {}
 

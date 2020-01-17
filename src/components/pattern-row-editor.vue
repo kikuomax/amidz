@@ -1,5 +1,14 @@
 <template>
   <g>
+    <use
+      v-for="(column, colIndex) in columns"
+      :key="`symbol-${colIndex}`"
+      :href="referenceSymbol(column)"
+      :x="colIndex * columnWidth"
+      y="0"
+      :width="columnWidth"
+      :height="rowHeight"
+    />
     <rect
       ref="bounding-box"
       class="selection-grid"
@@ -10,7 +19,7 @@
       @click="onBoundingBoxClicked"
     />
     <line
-      v-for="colIndex in (row.columns.length - 1)"
+      v-for="colIndex in (columns.length - 1)"
       :key="`grid-${colIndex}`"
       class="selection-grid"
       :x1="colIndex * columnWidth"
@@ -18,21 +27,20 @@
       y1="0"
       :y2="rowHeight"
     />
-    <use
-      v-for="(column, colIndex) in row.columns"
-      :key="`symbol-${colIndex}`"
-      :href="referenceSymbolId(column)"
-      :x="colIndex * columnWidth"
-      y="0"
-      :width="columnWidth"
-      :height="rowHeight"
-    />
   </g>
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
+import symbolUser from '@components/mixins/symbol-user'
+
+/* global process */
 export default {
   name: 'PatternRowEditor',
+  mixins: [
+    symbolUser
+  ],
   props: {
     row: {
       type: Object,
@@ -45,17 +53,31 @@ export default {
     rowHeight: {
       type: Number,
       required: true
-    },
-    referenceSymbolId: {
-      type: Function,
-      required: true
+    }
+  },
+  computed: {
+    ...mapState('pattern-editor', [
+      'symbolToPlace'
+    ]),
+    columns () {
+      return this.row.columns
     }
   },
   methods: {
     onBoundingBoxClicked (event) {
-      const { left, top } = this.$refs['bounding-box'].getBoundingClientRect()
-      console.log('[PatternRowEditor] client', event.clientX, event.clientY)
-      console.log('[PatternRowEditor] relative', event.clientX - left, event.clientY - top)
+      const { left } = this.$refs['bounding-box'].getBoundingClientRect()
+      const { clientX } = event
+      const x = clientX - left
+      const columnIndex = Math.floor(x / this.columnWidth)
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('[PatternRowEditor]', `placing ${this.symbolToPlace} at ${columnIndex}`)
+      }
+      if ((columnIndex >= 0) && (columnIndex < this.columns.length)) {
+        this.$emit('placing-symbol', {
+          columnIndex: columnIndex,
+          symbol: this.symbolToPlace
+        })
+      }
     }
   }
 }

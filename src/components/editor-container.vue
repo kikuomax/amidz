@@ -1,24 +1,29 @@
 <template>
   <div>
-    <svg
-      ref="container-root"
-      xmlns="http://www.w3.org/2000/svg"
-      xmlns:xlink="http://www.w3.org/1999/xlink"
-      version="1.1"
-    >
-      <symbol-registry />
-      <router-view />
-    </svg>
+    <div>
+      <svg
+        ref="container-root"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        version="1.1"
+      >
+        <symbol-registry />
+        <router-view />
+      </svg>
+    </div>
+    <symbol-picker />
   </div>
 </template>
 
 <script>
+import SymbolPicker from '@components/symbol-picker'
 import SymbolRegistry from '@components/symbol-registry'
 
 /* global process */
 export default {
   name: 'EditorContainer',
   components: {
+    SymbolPicker,
     SymbolRegistry
   },
   mounted () {
