@@ -10,13 +10,7 @@
         aria-controls="dropdown-menu"
         @click="toggleDropdown"
       >
-        <svg viewBox="0 0 1 1">
-          <use
-            width="1.0"
-            height="1.0"
-            :href="referenceSymbol(symbolToPlace)"
-          />
-        </svg>
+        <img :src="symbolPath(symbolToPlace)">
       </button>
     </div>
     <div
@@ -35,13 +29,7 @@
             class="button icon is-large symbol-icon"
             @click="selectSymbol(symbolId)"
           >
-            <svg viewBox="0 0 1 1">
-              <use
-                width="1.0"
-                height="1.0"
-                :href="referenceSymbol({ symbolId })"
-              />
-            </svg>
+            <img :src="symbolPath({ symbolId })">
           </button>
         </div>
       </div>
@@ -55,13 +43,8 @@ import {
   mapState
 } from 'vuex'
 
-import symbolUser from '@components/mixins/symbol-user'
-
 export default {
   name: 'SymbolPicker',
-  mixins: [
-    symbolUser
-  ],
   data () {
     return {
       symbolIds: [
@@ -91,6 +74,9 @@ export default {
     selectSymbol (symbolId) {
       this.isDropdownActive = false
       this.setSymbolToPlace({ symbolId })
+    },
+    symbolPath ({ symbolId }) {
+      return `symbols/${symbolId}.svg`
     }
   }
 }
@@ -109,7 +95,7 @@ button.icon.symbol-icon {
   padding: 0;
 }
 
-.icon.is-large.symbol-icon svg {
+.icon.is-large.symbol-icon img {
   width: 1.5em;
   height: 1.5em;
 }
