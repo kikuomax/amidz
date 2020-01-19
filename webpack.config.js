@@ -22,20 +22,42 @@ module.exports = {
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        loader: 'eslint-loader'
+        use: 'eslint-loader'
       },
       {
         test: /\.vue$/,
-        loader: [
+        use: [
           'vue-loader',
           'eslint-loader'
         ]
       },
       {
         test: /\.css$/,
-        loader: [
+        use: [
           'style-loader',
           'css-loader'
+        ]
+      },
+      // loads an SVG file as a Vue component.
+      {
+        test: /\.svg$/,
+        use: [
+          'babel-loader',
+          {
+            loader: 'vue-svg-loader',
+            options: {
+              svgo: {
+                plugins: [
+                  {
+                    removeDimensions: true
+                  },
+                  {
+                    removeViewBox: false
+                  }
+                ]
+              }
+            }
+          }
         ]
       }
     ]
@@ -43,7 +65,8 @@ module.exports = {
   resolve: {
     alias: {
       '@components': path.resolve(__dirname, 'src/components'),
-      '@route': path.resolve(__dirname, 'src/route')
+      '@route': path.resolve(__dirname, 'src/route'),
+      '@store': path.resolve(__dirname, 'src/store')
     },
     extensions: [
       '.js',
