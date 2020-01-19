@@ -99,3 +99,24 @@ To start a Webpack Dev Server, please take the following steps,
 4. Your default browser will open http://localhost:8080.
 
 As a Webpack Dev Server monitors changes on source files and will automatically reload a rebuilt application, you do not need to manually reload the application when you edit a source file.
+
+### Generating documentation of the code
+
+The source code of Amidz is documented with [JSDoc](https://github.com/jsdoc/jsdoc) + the [jsdoc-vuejs](https://github.com/Kocal/jsdoc-vuejs) plugin.
+If you want to generate documentation of the code, please take the following steps,
+
+1. Suppose you are in the root directory of your copy of this repository.
+
+2. Install necessary modules (first time only).
+
+    ```
+    npm install
+    ```
+
+3. Run JSDoc.
+
+    ```
+    npm run build:doc
+    ```
+
+4. You will find documentation in an `api-doc` directory.
