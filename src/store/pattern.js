@@ -6,6 +6,8 @@
  * @memberof module:store
  */
 
+/* global process */
+
 /**
  * `State` of the current pattern.
  *
@@ -39,15 +41,6 @@ const state = {
           },
           {
             symbolId: 'test-symbol2'
-          },
-          {
-            symbolId: 'blank-symbol'
-          },
-          {
-            symbolId: 'blank-symbol'
-          },
-          {
-            symbolId: 'blank-symbol'
           }
         ]
       },
@@ -80,6 +73,18 @@ const getters = {}
  *       Has the following field,
  *         - `symbolId`: {`string`}
  *           ID of the symbol to set.
+ * - `setColumnCount`: {`function`}
+ *   Sets the number of columns of a specified row.
+ *   Takes an object that has the following fields,
+ *     - `rowIndex`: {`number`}
+ *       Index of the row to resize.
+ *     - `columnCount`: {`number`}
+ *       Number of columns to set.
+ *
+ *   If `columnCount` is smaller than the current number of columns,
+ *   extra columns are simply deleted.
+ *   If `columnCount` is larger than the current number of columns,
+ *   new columns are populated with a blank symbol.
  *
  * @member {object} mutations
  *
@@ -87,10 +92,30 @@ const getters = {}
  */
 const mutations = {
   setSymbolAt (state, { rowIndex, columnIndex, symbol }) {
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('[pattern].setSymbolAt', rowIndex, columnIndex, symbol)
+    }
     const { patternData } = state
     const { rows } = patternData
     const { columns } = rows[rowIndex]
     columns[columnIndex].symbolId = symbol.symbolId
+  },
+  setColumnCount (state, { rowIndex, columnCount }) {
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('[pattern].setColumnCount', rowIndex, columnCount)
+    }
+    const { patternData } = state
+    const { rows } = patternData
+    const { columns } = rows[rowIndex]
+    if (columnCount < columns.length) {
+      columns.splice(columnCount)
+    } else {
+      for (let cc = columns.length; cc < columnCount; ++cc) {
+        columns.push({
+          symbolId: 'blank-symbol'
+        })
+      }
+    }
   }
 }
 

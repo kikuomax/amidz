@@ -7,7 +7,8 @@
       :transform="rowTransform(rowIndex)"
       :row-height="rowHeight"
       :is-edited="rowIndex === editedRowIndex"
-      @placing-symbol="placeSymbol({ rowIndex, ...$event })"
+      @placing-symbol="setSymbolAt({ rowIndex, ...$event })"
+      @setting-column-count="setColumnCount({ rowIndex, ...$event })"
     />
   </g>
 </template>
@@ -20,7 +21,6 @@ import {
 
 import PatternRow from '@components/pattern-row'
 
-/* global process */
 export default {
   name: 'PatternEditor',
   components: {
@@ -48,21 +48,12 @@ export default {
   },
   methods: {
     ...mapMutations('pattern', [
-      'setSymbolAt'
+      'setSymbolAt',
+      'setColumnCount'
     ]),
     rowTransform (rowIndex) {
       const totalHeight = this.rowHeight * this.patternData.rows.length
       return `translate(0, ${totalHeight - ((rowIndex + 1) * this.rowHeight)})`
-    },
-    placeSymbol ({ rowIndex, columnIndex, symbol }) {
-      if (process.env.NODE_ENV !== 'production') {
-        console.log('[PatternEditor]', rowIndex, columnIndex, symbol)
-      }
-      this.setSymbolAt({
-        rowIndex,
-        columnIndex,
-        symbol
-      })
     }
   }
 }
