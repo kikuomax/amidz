@@ -53,6 +53,7 @@
         :width="columnWidth * 0.5"
         :height="rowHeight"
         @pointerdown="onRowExpansionHandlePressed"
+        @touchstart="onRowExpansionHandleTouched"
         @pointermove="onRowExpansionHandleDragged"
         @pointerup="onRowExpansionHandleReleased"
       />
@@ -175,6 +176,9 @@ export default {
       this.rowExpansionHandle.isDragged = true
       this.rowExpansionHandle.lastClientX = clientX
       target.setPointerCapture(event.pointerId)
+    },
+    onRowExpansionHandleTouched (event) {
+      event.preventDefault()
     },
     onRowExpansionHandleDragged (event) {
       if (process.env.NODE_ENV !== 'production') {

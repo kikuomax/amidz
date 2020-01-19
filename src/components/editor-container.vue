@@ -3,6 +3,7 @@
     <div>
       <svg
         ref="container-root"
+        class="editor-container"
         xmlns="http://www.w3.org/2000/svg"
         xmlns:xlink="http://www.w3.org/1999/xlink"
         version="1.1"
@@ -50,3 +51,13 @@ export default {
   }
 }
 </script>
+
+<style>
+/*
+ suppresses the default touch action.
+ https://github.com/kikuomax/amidz/issues/14
+ */
+svg.editor-container {
+  touch-action: none;
+}
+</style>
