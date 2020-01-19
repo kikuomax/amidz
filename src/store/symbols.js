@@ -1,5 +1,5 @@
 /**
- * Vuex model for the symbol registry.
+ * `Vuex` model for the symbol registry.
  *
  * @namespace symbols
  *
@@ -9,7 +9,7 @@
 /* global process */
 
 /**
- * State of the symbol registry.
+ * `State` of the symbol registry.
  *
  * The following fields are defined,
  * - `requestedSymbolIds`: {`array<string>`}
@@ -24,7 +24,7 @@
  *
  * @member state
  *
- * @memberof module:store/symbols
+ * @memberof module:store.symbols
  */
 const state = {
   requestedSymbolIds: [],
@@ -34,7 +34,7 @@ const state = {
 const getters = {}
 
 /**
- * Mutations of the symbol registry.
+ * `Mutations` of the symbol registry.
  *
  * The following mutations are defined,
  * - `appendRequestedSymbolId`: {`function`}
@@ -57,7 +57,7 @@ const getters = {}
  *
  * @member mutations
  *
- * @memberof module:store/symbols
+ * @memberof module:store.symbols
  */
 const mutations = {
   appendRequestedSymbolId (state, symbolId) {
@@ -72,7 +72,7 @@ const mutations = {
 }
 
 /**
- * Actions of the symbol registry.
+ * `Actions` of the symbol registry.
  *
  * The following action is defined,
  * - `requestSymbol`: {`function`}
@@ -89,7 +89,7 @@ const mutations = {
  *
  * @member actions
  *
- * @memberof module:store/symbols
+ * @memberof module:store.symbols
  */
 const actions = {
   requestSymbol ({ commit, state }, { symbolId }) {

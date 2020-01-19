@@ -1,5 +1,5 @@
 /**
- * Vuex model of the pattern editor.
+ * `Vuex` model of the pattern editor.
  *
  * @namespace pattern-editor
  *
@@ -18,7 +18,7 @@
  *
  * @member {object} state
  *
- * @memberof module:store/pattern-editor
+ * @memberof module:store.pattern-editor
  */
 const state = {
   symbolToPlace: {
@@ -41,7 +41,7 @@ const getters = {
  *
  * @member {object} mutations
  *
- * @memberof module:store/pattern-editor
+ * @memberof module:store.pattern-editor
  */
 const mutations = {
   setSymbolToPlace (state, { symbolId }) {

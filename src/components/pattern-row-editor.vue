@@ -69,6 +69,49 @@ import symbolUser from '@components/mixins/symbol-user'
 import ArrowIcon from '@mdi/svg/svg/arrow-left-right-bold.svg'
 
 /* global process */
+
+/**
+ * Vue component representing an editor of a pattern row.
+ *
+ * This component replaces {@linkcode module:components.PatternRow}.
+ *
+ * `placing-symbol` event provides an object that has the following fields,
+ * - `columnIndex`: {`number`}
+ *   Index of the column where the symbol is to be placed.
+ * - `symbol`: {`object`}
+ *   Symbol to place.
+ *   Has the following field,
+ *     - `symbolId`: {`string`}
+ *       ID of the symbol to place.
+ *
+ * `setting-column-count` event provides an object that has the following field,
+ * - `columnCount`: {`number`}
+ *   Number of columns to set.
+ *
+ * @namespace PatternRowEditor
+ *
+ * @vue-prop {Object} row
+ *
+ *   Row to edit.
+ *
+ * @vue-prop {Number} columnWidth
+ *
+ *   Column width.
+ *
+ * @vue-prop {Number} rowHeight
+ *
+ *   Row height.
+ *
+ * @vue-event {Object} placing-symbol
+ *
+ *   When a user is going to place a symbol of a column.
+ *
+ * @vue-event {Object} setting-column-count
+ *
+ *   When a user is going to set the number of columns of the row.
+ *
+ * @memberof module:components
+ */
 export default {
   name: 'PatternRowEditor',
   components: {
@@ -148,6 +191,7 @@ export default {
         })
       }
     },
+    // TODO: remove this method.
     onBoundingBoxClicked (event) {
       const { left } = this.$refs['bounding-box'].getBoundingClientRect()
       const { clientX } = event

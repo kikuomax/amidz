@@ -28,6 +28,14 @@
 
 <script>
 /* global process */
+
+/**
+ * Vue component representing a main screen.
+ *
+ * @namespace MainScreen
+ *
+ * @memberof module:components
+ */
 export default {
   name: 'MainScreen',
   data () {

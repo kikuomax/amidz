@@ -13,6 +13,16 @@
 
 <script>
 /* global process */
+
+/**
+ * Vue component representing an installer interface.
+ *
+ * Shows a button that installs a PWA.
+ *
+ * @namespace InstallPwa
+ *
+ * @memberof module:components
+ */
 export default {
   name: 'InstallPwa',
   data () {

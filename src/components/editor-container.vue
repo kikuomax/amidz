@@ -21,6 +21,23 @@ import SymbolPicker from '@components/symbol-picker'
 import SymbolRegistry from '@components/symbol-registry'
 
 /* global process */
+
+/**
+ * Vue component representing an editor container.
+ *
+ * `editor-ready` event provides an object that has the following field,
+ * - `requestSvgText`: {`function`}
+ *   Function that renders the contents as an SVG text.
+ *   Takes no argument and returns a `string` that represents the contents SVG.
+ *
+ * @namespace EditorContainer
+ *
+ * @vue-event {object} editor-ready
+ *
+ *   Emitted when this component becomes ready.
+ *
+ * @memberof module:components
+ */
 export default {
   name: 'EditorContainer',
   components: {
@@ -54,7 +71,7 @@ export default {
 
 <style>
 /*
- suppresses the default touch action.
+ suppresses the default touch action on a mobile phone.
  https://github.com/kikuomax/amidz/issues/14
  */
 svg.editor-container {

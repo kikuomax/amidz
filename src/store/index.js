@@ -1,3 +1,9 @@
+/**
+ * Root `Vuex` store of Amidz.
+ *
+ * @module store
+ */
+
 import Vue from 'vue'
 import Vuex from 'vuex'
 

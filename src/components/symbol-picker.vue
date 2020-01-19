@@ -43,6 +43,17 @@ import {
   mapState
 } from 'vuex'
 
+/**
+ * Vue component representing a symbol picker.
+ *
+ * A symbol picked in this component is set to the `symbolToPlace`
+ * [state]{@linkcode module:store.pattern-editor.state} of
+ * the {@linkcode module:store.pattern-editor} store.
+ *
+ * @namespace SymbolPicker
+ *
+ * @memberof module:components
+ */
 export default {
   name: 'SymbolPicker',
   data () {

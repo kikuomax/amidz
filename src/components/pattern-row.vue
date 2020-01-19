@@ -2,6 +2,33 @@
 import PatternRowEditor from '@components/pattern-row-editor'
 import PatternRowRenderer from '@components/pattern-row-renderer'
 
+/**
+ * Vue component representing a row of a pattern.
+ *
+ * This Vue component is a placeholder for the following components,
+ * - {@linkcode module:components.PatternRowEditor} when `isEdited = true`
+ * - {@linkcode module:components.PatternRowRenderer} when `isEdited = false`
+ *
+ * @namespace PatternRow
+ *
+ * @vue-prop {Object} row
+ *
+ *   Row to render or edit.
+ *
+ * @vue-prop {Number} [columnWidth=50]
+ *
+ *   Column width.
+ *
+ * @vue-prop {Number} rowHeight
+ *
+ *   Row height.
+ *
+ * @vue-prop {Boolean} [isEdited=false]
+ *
+ *   Whether the row is to be edited.
+ *
+ * @memberof module:components
+ */
 export default {
   name: 'PatternRow',
   props: {

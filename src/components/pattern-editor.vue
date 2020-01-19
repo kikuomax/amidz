@@ -21,6 +21,21 @@ import {
 
 import PatternRow from '@components/pattern-row'
 
+/**
+ * Vue component representing a pattern editor.
+ *
+ * @namespace PatternEditor
+ *
+ * @vue-prop {Number} [columnWidth=50]
+ *
+ *   Column width.
+ *
+ * @vue-prop {Number} [rowHeight=50]
+ *
+ *   Row height.
+ *
+ * @memberof module:components
+ */
 export default {
   name: 'PatternEditor',
   components: {

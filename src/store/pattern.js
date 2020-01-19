@@ -1,5 +1,5 @@
 /**
- * Vuex module of a current pattern.
+ * `Vuex` module of a current pattern.
  *
  * @namespace pattern
  *
@@ -26,7 +26,7 @@
  *
  * @member {object} state
  *
- * @memberof module:store/pattern
+ * @memberof module:store.pattern
  */
 const state = {
   patternData: {
@@ -88,7 +88,7 @@ const getters = {}
  *
  * @member {object} mutations
  *
- * @memberof module:store/pattern
+ * @memberof module:store.pattern
  */
 const mutations = {
   setSymbolAt (state, { rowIndex, columnIndex, symbol }) {

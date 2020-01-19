@@ -1,4 +1,21 @@
 <script>
+/**
+ * Vue component representing a symbol definition.
+ *
+ * This component renders an SVG element as an entry of the `defs` element.
+ *
+ * @namespace SymbolDefinition
+ *
+ * @vue-prop {String} symbolId
+ *
+ *   ID of the symbol.
+ *
+ * @vue-prop {any} svg
+ *
+ *   SVG element to render.
+ *
+ * @memberof module:components
+ */
 export default {
   name: 'SymbolDefinition',
   props: {

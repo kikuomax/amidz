@@ -1,3 +1,9 @@
+/**
+ * `vue-router` model of Amidz.
+ *
+ * @module route
+ */
+
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
