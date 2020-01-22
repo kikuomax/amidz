@@ -19,7 +19,30 @@ module.exports = {
     filename: 'main.js',
     path: path.resolve(__dirname, 'dist')
   },
-  module: commonConfig.module,
+  module: {
+    rules: [
+      ...commonConfig.module.rules,
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: 'eslint-loader'
+      },
+      {
+        test: /\.vue$/,
+        use: [
+          'vue-loader',
+          'eslint-loader'
+        ]
+      },
+      {
+        test: /\.css$/,
+        use: [
+          'style-loader',
+          'css-loader'
+        ]
+      }
+    ]
+  },
   resolve: commonConfig.resolve,
   plugins: [
     new VueLoaderPlugin(),

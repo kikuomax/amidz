@@ -3,25 +3,6 @@ const path = require('path')
 module.exports = {
   module: {
     rules: [
-      {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        use: 'eslint-loader'
-      },
-      {
-        test: /\.vue$/,
-        use: [
-          'vue-loader',
-          'eslint-loader'
-        ]
-      },
-      {
-        test: /\.css$/,
-        use: [
-          'style-loader',
-          'css-loader'
-        ]
-      },
       // loads an SVG file as a Vue component.
       {
         test: /\.svg$/,
