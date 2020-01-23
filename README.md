@@ -1,5 +1,7 @@
 English/[日本語](README_ja.md)
 
+[![CircleCI](https://circleci.com/gh/kikuomax/amidz.svg?style=svg)](https://circleci.com/gh/kikuomax/amidz)
+
 # Amidz
 
 A knitting and crochet pattern editor.
