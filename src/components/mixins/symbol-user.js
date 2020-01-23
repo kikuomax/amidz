@@ -14,10 +14,11 @@
  *       ID of the symbol to reference.
  *
  *   Returns a reference ID associated with `symbolId`.
+ *   A reference ID equals `symbolId` preceded by `'#'`.
  *
  * @namespace symbol-user
  *
- * @memberof module:mixins
+ * @memberof module:components/mixins
  */
 
 import { mapActions } from 'vuex'

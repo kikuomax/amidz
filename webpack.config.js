@@ -4,6 +4,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const WorkboxPlugin = require('workbox-webpack-plugin')
 
+const commonConfig = require('./webpack.common.js')
+
 const defaultMode = 'development'
 
 module.exports = {
@@ -19,6 +21,7 @@ module.exports = {
   },
   module: {
     rules: [
+      ...commonConfig.module.rules,
       {
         test: /\.js$/,
         exclude: /node_modules/,
@@ -37,42 +40,10 @@ module.exports = {
           'style-loader',
           'css-loader'
         ]
-      },
-      // loads an SVG file as a Vue component.
-      {
-        test: /\.svg$/,
-        use: [
-          'babel-loader',
-          {
-            loader: 'vue-svg-loader',
-            options: {
-              svgo: {
-                plugins: [
-                  {
-                    removeDimensions: true
-                  },
-                  {
-                    removeViewBox: false
-                  }
-                ]
-              }
-            }
-          }
-        ]
       }
     ]
   },
-  resolve: {
-    alias: {
-      '@components': path.resolve(__dirname, 'src/components'),
-      '@route': path.resolve(__dirname, 'src/route'),
-      '@store': path.resolve(__dirname, 'src/store')
-    },
-    extensions: [
-      '.js',
-      '.vue'
-    ]
-  },
+  resolve: commonConfig.resolve,
   plugins: [
     new VueLoaderPlugin(),
     new HtmlWebpackPlugin({

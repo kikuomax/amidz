@@ -100,6 +100,38 @@ To start a Webpack Dev Server, please take the following steps,
 
 As a Webpack Dev Server monitors changes on source files and will automatically reload a rebuilt application, you do not need to manually reload the application when you edit a source file.
 
+### Unit testing
+
+Unit testing of Amidz is backed by the following packages,
+- [Mochapack](https://github.com/sysgears/mochapack) as a test runner
+- [Chai](https://www.chaijs.com) as an assertion library
+- [Sinon](https://sinonjs.org) for spying
+- [Vue Test Utils](https://vue-test-utils.vuejs.org) for testing Vue components
+
+To run unit tests, please take the following steps,
+
+1. Suppose you are in the root directory of your copy of this repository.
+
+2. Install necessary modules (first time only).
+
+    ```
+    npm install
+    ```
+
+3. Run unit tests.
+
+    ```
+    npm test
+    ```
+
+4. You will see test results printed on the console.
+
+You can run tests in the [watch mode](https://github.com/sysgears/mochapack#watch-mode---watch) by specifying `-- --watch` at the step 3.
+
+```
+npm test -- --watch
+```
+
 ### Generating documentation of the code
 
 The source code of Amidz is documented with [JSDoc](https://github.com/jsdoc/jsdoc) + the [jsdoc-vuejs](https://github.com/Kocal/jsdoc-vuejs) plugin.
