@@ -1,5 +1,7 @@
 [English](README.md)/日本語
 
+[![CircleCI](https://circleci.com/gh/kikuomax/amidz.svg?style=svg)](https://circleci.com/gh/kikuomax/amidz)
+
 # Amidz
 
 編み図エディター。
