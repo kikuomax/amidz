@@ -100,6 +100,38 @@ Webpack Dev Serverを開始するには、以下の手順を実施してくだ�
 
 Webpack Dev Serverはソースファイルへの変更を監視して自動的にアプリケーションをリビルドするので、ソースファイルを編集した際に手動でアプリケーションをリロードする必要はありません。
 
+### ユニットテスト
+
+Amidzのyニットテストは以下のツールに支えられています。
+- [Mochapack](https://github.com/sysgears/mochapack): テストランナー
+- [Chai](https://www.chaijs.com): アサーションライブラリ
+- [Sinon](https://sinonjs.org): スパイ
+- [Vue Test Utils](https://vue-test-utils.vuejs.org): Vueコンポーネントのテスト
+
+ユニットテストを実行するためには、以下のステップを実施してください。
+
+1. このリポジトリのルートディレクトリにいるものと仮定します。
+
+2. 必要なモジュールをインストールします(初回のみ)。
+
+    ```
+    npm install
+    ```
+
+3. ユニットテストを実行します。
+
+    ```
+    npm test
+    ```
+
+4. テスト結果がコンソール上に出力されるはずです。
+
+ステップ3で`-- --watch`を指定するとテストを[ウォッチモード](https://github.com/sysgears/mochapack#watch-mode---watch)で実行できます。
+
+```
+npm test -- --watch
+```
+
 ### コードのドキュメンテーションの生成
 
 Amidzのソースコードは[JSDoc](https://github.com/jsdoc/jsdoc) + [jsdoc-vuejs](https://github.com/Kocal/jsdoc-vuejs)プラグインでドキュメントしています。
