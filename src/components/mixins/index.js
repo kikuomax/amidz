@@ -3,5 +3,5 @@
 /**
  * Provides mixins for Vue components.
  *
- * @module components.mixins
+ * @module components/mixins
  */
