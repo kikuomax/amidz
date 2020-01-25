@@ -7,9 +7,11 @@
     "doc": "docs"
   },
   "scripts": {
+    "start": "node test-server.js",
     "build": "webpack",
     "build:doc": "jsdoc -r -c jsdoc-conf.js -d api-doc",
     "test": "mochapack --webpack-config webpack.config-test.js --require test/setup.js test/**/*.spec.js",
+    "cypress:open": "cypress open",
     "dev": "webpack-dev-server --open",
     "lint": "eslint --ext .js,.vue src"
   },
@@ -38,6 +40,7 @@
     "chai": "^4.2.0",
     "copy-webpack-plugin": "^5.1.1",
     "css-loader": "^3.4.1",
+    "cypress": "^3.8.2",
     "d3": "^5.15.0",
     "eslint": "^6.8.0",
     "eslint-loader": "^3.0.3",
