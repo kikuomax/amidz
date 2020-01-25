@@ -1,5 +1,5 @@
 <template>
-  <g>
+  <g class="edited-row">
     <use
       v-for="(column, colIndex) in columns"
       :key="`symbol-${colIndex}`"
