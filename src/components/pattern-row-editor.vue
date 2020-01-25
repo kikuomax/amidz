@@ -234,10 +234,7 @@ export default {
       if (!this.rowExpansionHandle.isDragged) {
         return
       }
-      const { target, clientX } = event
-      if (!target.hasPointerCapture(event.pointerId)) {
-        return
-      }
+      const { clientX } = event
       const { lastClientX } = this.rowExpansionHandle
       this.rowExpansionHandle.left += clientX - lastClientX
       this.rowExpansionHandle.lastClientX = clientX
