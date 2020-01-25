@@ -56,6 +56,7 @@
         @touchstart="onRowExpansionHandleTouched"
         @pointermove="onRowExpansionHandleDragged"
         @pointerup="onRowExpansionHandleReleased"
+        @pointercancel="onRowExpansionHandleReleased($event, true)"
       />
     </g>
   </g>
@@ -239,7 +240,8 @@ export default {
       this.rowExpansionHandle.left += clientX - lastClientX
       this.rowExpansionHandle.lastClientX = clientX
     },
-    onRowExpansionHandleReleased (event) {
+    // specify `true` to `isCancelled` to cancel edit.
+    onRowExpansionHandleReleased (event, isCancelled) {
       if (process.env.NODE_ENV !== 'production') {
         console.log(
           '[PatternRowEditor]',
@@ -247,7 +249,7 @@ export default {
           event)
       }
       this.rowExpansionHandle.isDragged = false
-      if (this.cellCount !== this.columns.length) {
+      if (!isCancelled && (this.cellCount !== this.columns.length)) {
         this.$emit('setting-column-count', { columnCount: this.cellCount })
       } else {
         // the row expansion handle may be dislocated.

@@ -56,4 +56,17 @@ describe('With a pattern row editor', function () {
     cy.get('g.edited-row use')
       .should('have.length', 2)
   })
+
+  it('Dragging of the row expansion handle by a designer is canceled', function () {
+    cy.get('.row-expansion-handle')
+      .as('handle')
+      .trigger('pointerdown', { pointerId })
+      .then(triggerPointermoveBy(cellWidth))
+      .trigger('pointercancel', { pointerId })
+    cy.get('.row-expansion-handle-shape')
+      .as('handle-shape')
+      .should('not.have.class', 'is-dragged')
+    cy.get('g.edited-row use')
+      .should('have.length', 3)
+  })
 })
