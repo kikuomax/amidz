@@ -1,5 +1,5 @@
 <template>
-  <g>
+  <g class="edited-row">
     <use
       v-for="(column, colIndex) in columns"
       :key="`symbol-${colIndex}`"
@@ -56,6 +56,7 @@
         @touchstart="onRowExpansionHandleTouched"
         @pointermove="onRowExpansionHandleDragged"
         @pointerup="onRowExpansionHandleReleased"
+        @pointercancel="onRowExpansionHandleReleased($event, true)"
       />
     </g>
   </g>
@@ -234,15 +235,13 @@ export default {
       if (!this.rowExpansionHandle.isDragged) {
         return
       }
-      const { target, clientX } = event
-      if (!target.hasPointerCapture(event.pointerId)) {
-        return
-      }
+      const { clientX } = event
       const { lastClientX } = this.rowExpansionHandle
       this.rowExpansionHandle.left += clientX - lastClientX
       this.rowExpansionHandle.lastClientX = clientX
     },
-    onRowExpansionHandleReleased (event) {
+    // specify `true` to `isCancelled` to cancel edit.
+    onRowExpansionHandleReleased (event, isCancelled) {
       if (process.env.NODE_ENV !== 'production') {
         console.log(
           '[PatternRowEditor]',
@@ -250,7 +249,7 @@ export default {
           event)
       }
       this.rowExpansionHandle.isDragged = false
-      if (this.cellCount !== this.columns.length) {
+      if (!isCancelled && (this.cellCount !== this.columns.length)) {
         this.$emit('setting-column-count', { columnCount: this.cellCount })
       } else {
         // the row expansion handle may be dislocated.
