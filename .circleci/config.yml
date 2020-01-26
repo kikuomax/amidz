@@ -45,7 +45,7 @@ jobs:
     - run:
         name: Unit tests
         command: npm test
-    - start_server
+    - start-server
     - run:
         name: E2E tests
         command: npm run cypress:run
