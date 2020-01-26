@@ -7,6 +7,10 @@
 # Node related
 node_modules
 
+# Cypress related
+/cypress/screenshots
+/cypress/videos
+
 # Editor related
 *.swp
 *~

@@ -134,6 +134,39 @@ Amidzのyニットテストは以下のツールに支えられています。
 npm test -- --watch
 ```
 
+### End-to-Endテスト
+
+End-to-End(E2E)テストは[Cypress](https://www.cypress.io)で行います。
+E2Eテストを実行するためには、以下のステップを実施してください。
+
+1. このリポジトリのルートディレクトリにいるものと仮定します。
+
+2. 必要なモジュールをインストールします(初回のみ)。
+
+    ```
+    npm install
+    ```
+
+3. Webpackの開発サーバを **バックグラウンド** で開始します。
+
+    ```
+    npm run dev &
+    ```
+
+4. Cypressを実行します。
+
+    ```
+    npm run cypress:run
+    ```
+
+5. テスト結果がコンソール上に出力されるはずです。
+
+ステップ3で`cypress:run`の代わりに`cypress:open`を指定するとテストを[インタラクティブモード](https://docs.cypress.io/guides/guides/command-line.html#cypress-open)でCypressを実行することができます。
+
+```
+npm run cypress:open
+```
+
 ### コードのドキュメンテーションの生成
 
 Amidzのソースコードは[JSDoc](https://github.com/jsdoc/jsdoc) + [jsdoc-vuejs](https://github.com/Kocal/jsdoc-vuejs)プラグインでドキュメントしています。

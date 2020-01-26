@@ -11,7 +11,8 @@
     "build:doc": "jsdoc -r -c jsdoc-conf.js -d api-doc",
     "test": "mochapack --webpack-config webpack.config-test.js --require test/setup.js test/**/*.spec.js",
     "cypress:open": "cypress open",
-    "dev": "webpack-dev-server --open",
+    "cypress:run": "cypress run",
+    "dev": "webpack-dev-server",
     "lint": "eslint --ext .js,.vue src"
   },
   "repository": {
@@ -61,6 +62,7 @@
     "vue-svg-loader": "^0.15.0",
     "vue-template-compiler": "^2.6.11",
     "vuex": "^3.1.2",
+    "wait-on": "^4.0.0",
     "webpack": "^4.41.5",
     "webpack-cli": "^3.3.10",
     "webpack-dev-server": "^3.10.1",
