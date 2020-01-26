@@ -134,6 +134,39 @@ You can run tests in the [watch mode](https://github.com/sysgears/mochapack#watc
 npm test -- --watch
 ```
 
+### End-to-End testing
+
+End-to-End (E2E) testing is conducted by [Cypress](https://www.cypress.io).
+To run E2E tests, please take the following steps,
+
+1. Suppose you are in the root directory of your copy of this repository.
+
+2. Install necessary modules (first time only).
+
+    ```
+    npm install
+    ```
+
+3. Start a Webpack Dev Server in the **background**.
+
+    ```
+    npm run dev &
+    ```
+
+4. Run Cypress.
+
+    ```
+    npm run cypress:run
+    ```
+
+5. You will see test results printed on the console.
+
+You can run Cypress in the [interactive mode](https://docs.cypress.io/guides/guides/command-line.html#cypress-open) by running `cypress:open` instead of `cypress:run` at the step 3.
+
+```
+npm run cypress:open
+```
+
 ### Generating documentation of the code
 
 The source code of Amidz is documented with [JSDoc](https://github.com/jsdoc/jsdoc) + the [jsdoc-vuejs](https://github.com/Kocal/jsdoc-vuejs) plugin.
