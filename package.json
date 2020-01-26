@@ -11,7 +11,7 @@
     "build:doc": "jsdoc -r -c jsdoc-conf.js -d api-doc",
     "test": "mochapack --webpack-config webpack.config-test.js --require test/setup.js test/**/*.spec.js",
     "cypress:open": "cypress open",
-    "cypress:run": "cypress run",
+    "cypress:run": "percy exec -- cypress run",
     "dev": "webpack-dev-server",
     "lint": "eslint --ext .js,.vue src"
   },
@@ -33,6 +33,7 @@
   "devDependencies": {
     "@babel/core": "^7.8.3",
     "@mdi/svg": "^4.7.95",
+    "@percy/cypress": "^2.2.0",
     "@vue/test-utils": "^1.0.0-beta.31",
     "babel-loader": "^8.0.6",
     "buefy": "^0.8.9",
