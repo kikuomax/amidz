@@ -1,13 +1,51 @@
 version: 2.1
+commands:
+  start-server:
+    steps:
+    - run:
+        name: Server start
+        command: npm run dev
+        background: true
+    - run:
+        name: Server wait
+        # http-get is necessary because a webpack dev server does not respond to
+        # a HEAD request that wait-on sends by default.
+        command: npx wait-on http-get://localhost:8080
+
 jobs:
   build:
     docker:
-      - image: circleci/node:12
+    - image: circleci/node:12-browsers
     steps:
-      - checkout
-      - run:
-          name: Package installation
-          command: npm install
-      - run:
-          name: Running unit tests
-          command: npm test
+    - checkout
+    - restore_cache:
+        keys:
+        - v1-cache-{{ arch }}-{{ checksum "package-lock.json" }}
+        - v1-cache-{{ arch }}-
+    - run:
+        name: Package installation
+        command: npm ci
+    - run:
+        name: Cypress verification
+        command: npx cypress verify
+    # adds Cypress binary to the cache
+    - save_cache:
+        key: v1-cache-{{ arch }}-{{ checksum "package-lock.json" }}
+        paths:
+        - ~/.npm
+        - ~/.cache
+    # adds node_modules to the cache
+    - save_cache:
+        key: v1-cache-{{ arch }}-{{ checksum "package-lock.json" }}
+        paths:
+        - node-modules
+    - run:
+        name: Linting
+        command: npm run lint
+    - run:
+        name: Unit tests
+        command: npm test
+    - start_server
+    - run:
+        name: E2E tests
+        command: npm run cypress:run
