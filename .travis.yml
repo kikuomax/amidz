@@ -1,0 +1,21 @@
+language: node_js
+node_js:
+- 12
+- 10
+
+os: linux
+
+addons:
+  apt:
+    sources:
+    - google-chrome
+    packages:
+    - google-chrome-stable
+
+install:
+- npm ci
+
+script:
+- npm run build
+- npm run test
+- npm run dev && npx wait-on http-get://localhost:8080 && npm run cypress:run
