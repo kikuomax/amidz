@@ -7,10 +7,16 @@ os: linux
 
 addons:
   apt:
-    sources:
-    - google-chrome
+    # https://docs.cypress.io/guides/guides/continuous-integration.html#Example-travis-yml-config-file
     packages:
-    - google-chrome-stable
+    - libgconf-2-4
+  chrome: stable
+
+# https://docs.cypress.io/guides/guides/continuous-integration.html#Example-travis-yml-config-file
+cache:
+  npm: true
+  directories:
+  - ~/.cache
 
 install:
 - npm ci
