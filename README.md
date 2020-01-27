@@ -1,6 +1,7 @@
 English/[日本語](README_ja.md)
 
 [![CircleCI](https://circleci.com/gh/kikuomax/amidz.svg?style=svg)](https://circleci.com/gh/kikuomax/amidz)
+[![This project is using Percy.io for visual regression testing.](https://percy.io/static/images/percy-badge.svg)](https://percy.io/Kikuo-Emoto/amidz)
 
 # Amidz
 
