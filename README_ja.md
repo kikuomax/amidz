@@ -1,6 +1,7 @@
 [English](README.md)/日本語
 
 [![CircleCI](https://circleci.com/gh/kikuomax/amidz.svg?style=svg)](https://circleci.com/gh/kikuomax/amidz)
+[![Travis CI Build Status](https://travis-ci.org/kikuomax/amidz.svg?branch=master)](https://travis-ci.org/kikuomax/amidz)
 [![This project is using Percy.io for visual regression testing.](https://percy.io/static/images/percy-badge.svg)](https://percy.io/Kikuo-Emoto/amidz)
 
 # Amidz
