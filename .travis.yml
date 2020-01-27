@@ -25,5 +25,5 @@ script:
 - npm run test
 - npm run dev &
 # suppresses Percy snapshots uploading unless Node.js is 12.x
-- if [[ $TRAVIS_NODE_VERSION != 12* ]]; then export PERCY_TOKE=; fi
+- if [[ $TRAVIS_NODE_VERSION != 12* ]]; then export PERCY_TOKEN=; fi
 - npx wait-on http-get://localhost:8080 && npm run cypress:run
