@@ -10,7 +10,7 @@
       :height="rowHeight"
     />
     <rect
-      class="glass-layer"
+      class="row-selection-layer"
       x="0"
       y="0"
       :width="rowWidth"
@@ -77,11 +77,3 @@ export default {
   }
 }
 </script>
-
-<style>
-/* invisible layer to capture pointer events. */
-.glass-layer {
-  fill: white;
-  fill-opacity: 0.0;
-}
-</style>

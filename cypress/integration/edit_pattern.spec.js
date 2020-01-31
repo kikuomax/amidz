@@ -10,7 +10,7 @@ describe('With a pattern editor', function () {
   }
 
   it('A designer clicks on a row to edit it', function () {
-    cy.get('.rendered-row .glass-layer')
+    cy.get('.rendered-row .row-selection-layer')
       .first()
       .click()
     cy.percySnapshot(`${testTitle()} [at click]`)

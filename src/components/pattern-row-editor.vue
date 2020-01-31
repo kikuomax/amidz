@@ -260,26 +260,21 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 .arrow-icon {
   fill: blue;
-}
 
-.arrow-icon.is-dragged {
-  fill: darkblue;
+  &.is-dragged {
+    fill: darkblue;
+  }
 }
 
 .row-expansion-handle-shape {
   fill: lightgray;
   stroke-width: 0;
-}
 
-.row-expansion-handle-shape.is-dragged {
-  fill: gray;
-  stroke-width: 0;
-}
-
-.row-expansion-handle {
-  fill-opacity: 0.0;
+  &.is-dragged {
+    fill: gray;
+  }
 }
 </style>
