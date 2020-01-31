@@ -1,5 +1,5 @@
 <template>
-  <g>
+  <g class="rendered-row">
     <use
       v-for="(column, colIndex) in columns"
       :key="colIndex"
