@@ -9,6 +9,7 @@
       :is-edited="rowIndex === editedRowIndex"
       @placing-symbol="setSymbolAt({ rowIndex, ...$event })"
       @setting-column-count="setColumnCount({ rowIndex, ...$event })"
+      @selecting-row="selectRow(rowIndex)"
     />
   </g>
 </template>
@@ -20,6 +21,8 @@ import {
 } from 'vuex'
 
 import PatternRow from '@components/pattern-row'
+
+/* global process */
 
 /**
  * Vue component representing a pattern editor.
@@ -69,6 +72,12 @@ export default {
     rowTransform (rowIndex) {
       const totalHeight = this.rowHeight * this.patternData.rows.length
       return `translate(0, ${totalHeight - ((rowIndex + 1) * this.rowHeight)})`
+    },
+    selectRow (rowIndex) {
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('[PatternEditor]', `selecting row ${rowIndex}`)
+      }
+      this.editedRowIndex = rowIndex
     }
   }
 }
