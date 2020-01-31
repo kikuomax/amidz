@@ -31,9 +31,12 @@ module.exports = {
     alias: {
       '@components': path.resolve(__dirname, 'src/components'),
       '@route': path.resolve(__dirname, 'src/route'),
+      '@scss': path.resolve(__dirname, 'src/scss'),
       '@store': path.resolve(__dirname, 'src/store')
     },
     extensions: [
+      '.css',
+      '.scss',
       '.js',
       '.vue'
     ]
