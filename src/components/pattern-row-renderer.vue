@@ -77,3 +77,11 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+@import "@scss/amidz-mixins";
+
+.row-selection-layer {
+  @extend %glass-layer;
+}
+</style>

@@ -8,8 +8,6 @@ Vue.use(Buefy)
 import router from '@route'
 import store from '@store'
 
-import '@scss/amidz-svg'
-
 import AppContainer from '@components/app-container'
 
 new Vue({

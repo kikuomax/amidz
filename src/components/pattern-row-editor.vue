@@ -1,5 +1,12 @@
 <template>
   <g class="edited-row">
+    <rect
+      class="row-selection-highlight"
+      x="0"
+      y="0"
+      :width="Math.max(rowExpansionHandle.left, rowWidth)"
+      :height="rowHeight"
+    />
     <use
       v-for="(column, colIndex) in columns"
       :key="`symbol-${colIndex}`"
@@ -261,11 +268,30 @@ export default {
 </script>
 
 <style lang="scss">
+@import "@scss/amidz-colors";
+@import "@scss/amidz-mixins";
+
+.row-selection-highlight {
+  fill: white;
+  fill-opacity: 1.0;
+  filter: url(#highlight-blur-selected-row);
+}
+
+.selection-grid {
+  fill-opacity: 0.0;
+  stroke: $theme-red;
+  stroke-width: 1.0;
+
+  &.temporary-grid {
+    stroke-dasharray: 2;
+  }
+}
+
 .arrow-icon {
-  fill: blue;
+  fill: $theme-green;
 
   &.is-dragged {
-    fill: darkblue;
+    fill: $theme-green-dark;
   }
 }
 
@@ -276,5 +302,19 @@ export default {
   &.is-dragged {
     fill: gray;
   }
+}
+
+.row-expansion-handle {
+  @extend %glass-layer;
+}
+
+.cell-to-add {
+  fill: red;
+  fill-opacity: 0.5;
+}
+
+.cell-to-delete {
+  fill: gray;
+  fill-opacity: 0.5;
 }
 </style>

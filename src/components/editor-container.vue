@@ -8,6 +8,12 @@
         xmlns:xlink="http://www.w3.org/1999/xlink"
         version="1.1"
       >
+        <defs>
+          <highlight-blur
+            id-suffix="selected-row"
+            color="#FF9955"
+          />
+        </defs>
         <symbol-registry />
         <router-view />
       </svg>
@@ -17,6 +23,7 @@
 </template>
 
 <script>
+import HighlightBlur from '@components/svg/highlight-blur'
 import SymbolPicker from '@components/symbol-picker'
 import SymbolRegistry from '@components/symbol-registry'
 
@@ -41,17 +48,13 @@ import SymbolRegistry from '@components/symbol-registry'
 export default {
   name: 'EditorContainer',
   components: {
+    HighlightBlur,
     SymbolPicker,
     SymbolRegistry
   },
   mounted () {
-    // programatically appends a style element
+    // programatically append a style element here (if necessary),
     // because <template> does not allows a <style> tag inside.
-    const svg = this.$refs['container-root']
-    const style = document.createElement('style')
-    style.innerHTML = '.selection-grid{fill:white;fill-opacity:0.0;stroke:red;stroke-width:1.0;}.temporary-grid{stroke-dasharray:2;}.cell-to-delete{fill:gray;fill-opacity:0.5;}.cell-to-add{fill:red;fill-opacity:0.5;}'
-    svg.appendChild(style)
-    // notifies the outer controller.
     this.$emit('editor-ready', {
       requestSvgText: () => this.exportSvgText()
     })
