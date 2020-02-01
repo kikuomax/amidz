@@ -1,12 +1,14 @@
 <template>
   <div>
-    <div>
+    <div ref="svg-container">
       <svg
-        ref="container-root"
-        class="editor-container"
+        ref="editor-svg"
+        class="editor-svg"
         xmlns="http://www.w3.org/2000/svg"
         xmlns:xlink="http://www.w3.org/1999/xlink"
         version="1.1"
+        :width="svg.width"
+        :height="svg.height"
       >
         <defs>
           <highlight-blur
@@ -52,7 +54,18 @@ export default {
     SymbolPicker,
     SymbolRegistry
   },
+  data () {
+    return {
+      svg: {
+        width: 300,
+        height: 200
+      }
+    }
+  },
   mounted () {
+    const container = this.$refs['svg-container']
+    this.svg.width = container.clientWidth
+    this.svg.height = window.innerHeight - 300
     // programatically append a style element here (if necessary),
     // because <template> does not allows a <style> tag inside.
     this.$emit('editor-ready', {
@@ -65,19 +78,25 @@ export default {
         console.log('[EditorContainer]', 'exporting an SVG image')
       }
       const serializer = new XMLSerializer()
-      const svg = this.$refs['container-root']
+      const svg = this.$refs['editor-svg']
       return serializer.serializeToString(svg)
     }
   }
 }
 </script>
 
-<style>
-/*
- suppresses the default touch action on a mobile phone.
- https://github.com/kikuomax/amidz/issues/14
- */
-svg.editor-container {
-  touch-action: none;
+<style lang="scss">
+.svg-container {
+  width: 100%;
+}
+
+svg {
+  &.editor-svg {
+    /*
+     suppresses the default touch action on a mobile phone.
+     https://github.com/kikuomax/amidz/issues/14
+     */
+    touch-action: none;
+  }
 }
 </style>
