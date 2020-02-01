@@ -1,5 +1,5 @@
 <template>
-  <g>
+  <g class="rendered-row">
     <use
       v-for="(column, colIndex) in columns"
       :key="colIndex"
@@ -8,6 +8,14 @@
       y="0"
       :width="columnWidth"
       :height="rowHeight"
+    />
+    <rect
+      class="row-selection-layer"
+      x="0"
+      y="0"
+      :width="rowWidth"
+      :height="rowHeight"
+      @click="$emit('selecting-row')"
     />
   </g>
 </template>
@@ -34,6 +42,10 @@ import symbolUser from '@components/mixins/symbol-user'
  *
  *   Row height.
  *
+ * @vue-event {None} selecting-row
+ *
+ *   Triggered when a user is selecting this row.
+ *
  * @memberof module:components
  */
 export default {
@@ -58,7 +70,18 @@ export default {
   computed: {
     columns () {
       return this.row.columns
+    },
+    rowWidth () {
+      return this.columnWidth * this.columns.length
     }
   }
 }
 </script>
+
+<style lang="scss">
+@import "@scss/amidz-mixins";
+
+.row-selection-layer {
+  @extend %glass-layer;
+}
+</style>

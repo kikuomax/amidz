@@ -1,0 +1,8 @@
+/* defines mixins in this file. */
+
+/* invisible layer to capture pointer events. */
+%glass-layer {
+  fill: white;
+  fill-opacity: 0.0;
+}
+

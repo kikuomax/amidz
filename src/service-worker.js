@@ -1,6 +1,6 @@
 // change `CACHE_SUFFIX` when precached items are modified.
 const CACHE_PREFIX = 'amidz'
-const CACHE_SUFFIX = 'v2.2'
+const CACHE_SUFFIX = 'v2.3'
 
 /* global workbox */
 

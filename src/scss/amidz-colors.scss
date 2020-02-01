@@ -1,0 +1,9 @@
+/* defines common colors in this file. */
+
+/* theme color: red. */
+$theme-red: #FF9955;
+$theme-red-dark: darken($theme-red, 10%);
+
+/* theme color: green. */
+$theme-green:#338000;
+$theme-green-dark: darken($theme-green, 10%);
