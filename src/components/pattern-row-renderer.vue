@@ -42,7 +42,7 @@ import symbolUser from '@components/mixins/symbol-user'
  *
  *   Row height.
  *
- * @vue-event selecting-row
+ * @vue-event {None} selecting-row
  *
  *   Triggered when a user is selecting this row.
  *

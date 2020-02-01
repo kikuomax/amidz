@@ -29,7 +29,7 @@
  * Highlight blur filter.
  *
  * The `id` of the filter will be `"highlight-blur-" + id-suffix`.
- * You can specify the `id` in a CSS.
+ * You can refer the `id` from a CSS.
  *
  * @vue-prop {String} id-suffix
  *
@@ -39,18 +39,18 @@
  *
  *   Color of the blur.
  *
- * @vue-prop [opacity=1.0] opacity
+ * @vue-prop {Number} [opacity=1.0]
  *
  *   Opacity of the blur.
  *
- * @vue-prop [std-deviation=3] std-deviation
+ * @vue-prop {Number} [std-deviation=3]
  *
  *   Standard deviation of the Gaussian blur for the blur.
  *   See https://developer.mozilla.org/en-US/docs/Web/SVG/Element/feGaussianBlur
  *
  * @namespace HighlightBlur
  *
- * @memberof module:components/svg.HighlightBlur
+ * @memberof module:components/svg
  */
 export default {
   name: 'HighlightBlur',
