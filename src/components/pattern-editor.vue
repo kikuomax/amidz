@@ -20,6 +20,7 @@
         :height="0.5 * rowHeight"
       />
       <rect
+        ref="add-row-button"
         class="add-row-button"
         x="0"
         y="0"
@@ -27,6 +28,7 @@
         :height="rowHeight"
         @pointerdown="onAddRowButtonPressed"
         @pointerup="onAddRowButtonReleased"
+        @pointermove="onAddRowButtonDragged"
       />
     </g>
     <g :transform="`translate(0, ${rowHeight})`">
@@ -92,7 +94,8 @@ export default {
     return {
       editedRowIndex: 0,
       addRowButton: {
-        isPressed: false
+        isPressed: false,
+        isDragged: false
       }
     }
   },
@@ -102,7 +105,7 @@ export default {
     ]),
     addRowButtonClass () {
       return {
-        'is-dragged': this.addRowButton.isPressed
+        'is-pressed': this.addRowButton.isPressed
       }
     },
     rows () {
@@ -135,6 +138,7 @@ export default {
       const { target, pointerId } = event
       target.setPointerCapture(pointerId)
       this.addRowButton.isPressed = true
+      this.addRowButton.isDragged = true
     },
     // appends a new row.
     // the new row is selected to edit.
@@ -142,9 +146,31 @@ export default {
       if (process.env.NODE_ENV !== 'production') {
         console.log('[PatternEditor]', 'add row button released')
       }
+      if (this.addRowButton.isPressed) {
+        this.appendNewRow()
+        this.editedRowIndex = this.rows.length - 1
+      }
       this.addRowButton.isPressed = false
-      this.appendNewRow()
-      this.editedRowIndex = this.rows.length - 1
+      this.addRowButton.isDragged = false
+    },
+    onAddRowButtonDragged ({ clientX, clientY }) {
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('[PatternEditor]', 'add row button dragged')
+      }
+      if (!this.addRowButton.isDragged) {
+        return
+      }
+      const button = this.$refs['add-row-button']
+      const { left, top, right, bottom } = button.getBoundingClientRect()
+      if ((left <= clientX) &&
+          (clientX < right) &&
+          (top <= clientY) &&
+          (clientY < bottom))
+      {
+        this.addRowButton.isPressed = true
+      } else {
+        this.addRowButton.isPressed = false
+      }
     }
   }
 }
@@ -159,7 +185,7 @@ rect {
     fill: lightgray;
     fill-opacity: 1.0;
 
-    &.is-dragged {
+    &.is-pressed {
       fill: gray;
     }
   }
@@ -175,7 +201,7 @@ rect {
   fill: $theme-green;
   fill-opacity: 1.0;
 
-  &.is-dragged {
+  &.is-pressed {
     fill: $theme-green-dark;
   }
 }
