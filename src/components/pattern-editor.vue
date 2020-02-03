@@ -1,16 +1,25 @@
 <template>
   <g>
-    <pattern-row
-      v-for="(row, rowIndex) in patternData.rows"
-      :key="rowIndex"
-      :row="row"
-      :transform="rowTransform(rowIndex)"
-      :row-height="rowHeight"
-      :is-edited="rowIndex === editedRowIndex"
-      @placing-symbol="setSymbolAt({ rowIndex, ...$event })"
-      @setting-column-count="setColumnCount({ rowIndex, ...$event })"
-      @selecting-row="selectRow(rowIndex)"
+    <add-row-button
+      :x="2"
+      :y="2"
+      :width="columnWidth - 4"
+      :height="rowHeight - 4"
+      @click="onAddRowButtonClicked"
     />
+    <g :transform="`translate(0, ${rowHeight})`">
+      <pattern-row
+        v-for="(row, rowIndex) in patternData.rows"
+        :key="rowIndex"
+        :row="row"
+        :transform="rowTransform(rowIndex)"
+        :row-height="rowHeight"
+        :is-edited="rowIndex === editedRowIndex"
+        @placing-symbol="setSymbolAt({ rowIndex, ...$event })"
+        @setting-column-count="setColumnCount({ rowIndex, ...$event })"
+        @selecting-row="selectRow(rowIndex)"
+      />
+    </g>
   </g>
 </template>
 
@@ -20,7 +29,9 @@ import {
   mapState
 } from 'vuex'
 
+import AddRowButton from '@components/add-row-button'
 import PatternRow from '@components/pattern-row'
+
 
 /* global process */
 
@@ -42,6 +53,7 @@ import PatternRow from '@components/pattern-row'
 export default {
   name: 'PatternEditor',
   components: {
+    AddRowButton,
     PatternRow
   },
   props: {
@@ -62,22 +74,36 @@ export default {
   computed: {
     ...mapState('pattern', [
       'patternData'
-    ])
+    ]),
+    rows () {
+      return this.patternData.rows
+    },
+    patternHeight () {
+      return this.rowHeight * this.rows.length
+    }
   },
   methods: {
     ...mapMutations('pattern', [
-      'setSymbolAt',
-      'setColumnCount'
+      'appendNewRow',
+      'setColumnCount',
+      'setSymbolAt'
     ]),
     rowTransform (rowIndex) {
-      const totalHeight = this.rowHeight * this.patternData.rows.length
-      return `translate(0, ${totalHeight - ((rowIndex + 1) * this.rowHeight)})`
+      const y = this.patternHeight - ((rowIndex + 1) * this.rowHeight)
+      return `translate(0, ${y})`
     },
     selectRow (rowIndex) {
       if (process.env.NODE_ENV !== 'production') {
         console.log('[PatternEditor]', `selecting row ${rowIndex}`)
       }
       this.editedRowIndex = rowIndex
+    },
+    onAddRowButtonClicked () {
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('[PatternEditor]', 'adding new row')
+      }
+      this.appendNewRow()
+      this.editedRowIndex = this.rows.length - 1
     }
   }
 }

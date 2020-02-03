@@ -60,37 +60,40 @@ const getters = {}
 /**
  * `Mutations` of the current pattern.
  *
- * The follwoing field is defined,
- * - `setSymbolAt`: {`function`}
- *   Sets the symbol of a specified cell to a given symbol.
- *   Takes an object that has the following fields,
- *     - `rowIndex`: {`number`}
- *       Row index of the cell to be replaced.
- *     - `columnIndex`: {`number`}
- *       Column index of the cell to be replaced.
- *     - `symbol`: {`object`}
- *       Symbol to set.
- *       Has the following field,
- *         - `symbolId`: {`string`}
- *           ID of the symbol to set.
- * - `setColumnCount`: {`function`}
- *   Sets the number of columns of a specified row.
- *   Takes an object that has the following fields,
- *     - `rowIndex`: {`number`}
- *       Index of the row to resize.
- *     - `columnCount`: {`number`}
- *       Number of columns to set.
- *
- *   If `columnCount` is smaller than the current number of columns,
- *   extra columns are simply deleted.
- *   If `columnCount` is larger than the current number of columns,
- *   new columns are populated with a blank symbol.
+ * The follwoing functions are defined,
+ * - [setSymbolAt]{@linkcode module:store.pattern.setSymbolAt}
+ * - [setColumnCount]{@linkcode module:store.pattern.setColumnCount}
+ * - [appendNewRow]{@linkcode module:store.pattern.appendNewRow}
  *
  * @member {object} mutations
  *
  * @memberof module:store.pattern
  */
 const mutations = {
+  /**
+   * (Mutation) Sets a symbol at a given cell.
+   *
+   * @function setSymbolAt
+   *
+   * @param {object} state
+   *
+   *   `State` of the `pattern` store.
+   *
+   * @param {object} _
+   *
+   *   Has the following fields,
+   *   - `rowIndex`: {`number`}
+   *     Row index of the cell to be updated.
+   *   - `columnIndex`: {`number`}
+   *     Column index of the cell to be updated.
+   *   - `symbol`: {`object`}
+   *     Symbol to set.
+   *     Has the following field,
+   *       - `symbolId`: {`string`}
+   *         ID of the symbol.
+   *
+   * @memberof module:store.pattern
+   */
   setSymbolAt (state, { rowIndex, columnIndex, symbol }) {
     if (process.env.NODE_ENV !== 'production') {
       console.log('[pattern].setSymbolAt', rowIndex, columnIndex, symbol)
@@ -100,6 +103,25 @@ const mutations = {
     const { columns } = rows[rowIndex]
     columns[columnIndex].symbolId = symbol.symbolId
   },
+  /**
+   * (Mutation) Sets the number of columns of a given row.
+   *
+   * @function setColumnCount
+   *
+   * @param {object} state
+   *
+   *   `State` of the `pattern` store.
+   *
+   * @param {object} _
+   *
+   *   Has the following fields,
+   *   - `rowIndex`: {`number`}
+   *     Row index of the cell to be updated.
+   *   - `columnCount`: {`number`}
+   *     Number of rows to set.
+   *
+   * @memberof module:store.pattern
+   */
   setColumnCount (state, { rowIndex, columnCount }) {
     if (process.env.NODE_ENV !== 'production') {
       console.log('[pattern].setColumnCount', rowIndex, columnCount)
@@ -116,6 +138,34 @@ const mutations = {
         })
       }
     }
+  },
+  /**
+   * (Mutation) Appends a new row.
+   *
+   * Appends a new row with a single blank column.
+   *
+   * @function appendNewRow
+   *
+   * @param {object} state
+   *
+   *   `State` of the `pattern` store.
+   *
+   * @memberof module:store.pattern
+   */
+  appendNewRow (state) {
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('[pattern].appendNewRow')
+    }
+    const { patternData } = state
+    const { rows } = patternData
+    const newRow = {
+      columns: [
+        {
+          symbolId: 'blank-symbol'
+        }
+      ]
+    }
+    rows.push(newRow)
   }
 }
 
