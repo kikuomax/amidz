@@ -41,7 +41,7 @@ describe('With a pattern editor', function () {
       .pointermoveBy({ dX: cellWidth, dY: cellHeight })
     cy.get('g.add-row-button')
       .should('not.have.class', 'is-pressed')
-    cy.percySnapshot(`${testTitle()} [at pointerdown]`)
+    cy.percySnapshot(`${testTitle()} [at pointermove]`)
     cy.get('@pointer-target')
       .pointer('up')
     // TODO: too specific to the current implementation.
