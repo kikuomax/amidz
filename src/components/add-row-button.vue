@@ -30,6 +30,7 @@
       @pointerdown="onPointerDown"
       @pointerup="onPointerUp"
       @pointermove="onPointerMove"
+      @pointercancel="onPointerCancel"
     />
   </g>
 </template>
@@ -140,6 +141,13 @@ export default {
       } else {
         this.isPressed = false
       }
+    },
+    onPointerCancel () {
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('[AddRowButton]', 'pointercancel')
+      }
+      this.isPressed = false
+      this.isDragged = false
     }
   }
 }

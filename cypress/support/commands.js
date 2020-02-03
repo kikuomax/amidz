@@ -26,3 +26,5 @@
 
 // percy support.
 import '@percy/cypress'
+
+import './pointer-events'
