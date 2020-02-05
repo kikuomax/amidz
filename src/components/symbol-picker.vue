@@ -1,6 +1,6 @@
 <template>
   <div
-    class="dropdown symbol-picker"
+    class="dropdown symbol-picker is-up"
     :class="dropdownClass"
   >
     <div class="dropdown-trigger">

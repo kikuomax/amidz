@@ -1,13 +1,13 @@
 <template>
   <g>
     <add-row-button
-      :x="2"
+      :x="2 + marginLeft"
       :y="2"
       :width="columnWidth - 4"
       :height="rowHeight - 4"
       @click="onAddRowButtonClicked"
     />
-    <g :transform="`translate(0, ${rowHeight})`">
+    <g :transform="`translate(${marginLeft}, ${rowHeight})`">
       <pattern-row
         v-for="(row, rowIndex) in patternData.rows"
         :key="rowIndex"
@@ -17,7 +17,8 @@
         :is-edited="rowIndex === editedRowIndex"
         @placing-symbol="setSymbolAt({ rowIndex, ...$event })"
         @setting-column-count="setColumnCount({ rowIndex, ...$event })"
-        @selecting-row="selectRow(rowIndex)"
+        @selecting-row="onSelectingRow(rowIndex)"
+        @deleting-row="onDeletingRow(rowIndex)"
       />
     </g>
   </g>
@@ -68,7 +69,8 @@ export default {
   },
   data () {
     return {
-      editedRowIndex: 0
+      editedRowIndex: 0,
+      marginLeft: 30
     }
   },
   computed: {
@@ -85,6 +87,7 @@ export default {
   methods: {
     ...mapMutations('pattern', [
       'appendNewRow',
+      'deleteRow',
       'setColumnCount',
       'setSymbolAt'
     ]),
@@ -92,11 +95,18 @@ export default {
       const y = this.patternHeight - ((rowIndex + 1) * this.rowHeight)
       return `translate(0, ${y})`
     },
-    selectRow (rowIndex) {
+    onSelectingRow (rowIndex) {
       if (process.env.NODE_ENV !== 'production') {
         console.log('[PatternEditor]', `selecting row ${rowIndex}`)
       }
       this.editedRowIndex = rowIndex
+    },
+    onDeletingRow (rowIndex) {
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('[PatternEditor]', `deleting row ${rowIndex}`)
+      }
+      this.deleteRow({ rowIndex })
+      this.editedRowIndex = -1
     },
     onAddRowButtonClicked () {
       if (process.env.NODE_ENV !== 'production') {

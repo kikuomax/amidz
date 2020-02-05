@@ -1,5 +1,35 @@
 <template>
   <g class="edited-row">
+    <g
+      v-show="rowExpansionHandle.isDragged"
+      class="drop-row-area"
+      :class="dropRowAreaClass"
+      :transform="`translate(-${columnWidth * 0.5}, 0)`"
+    >
+      <rect
+        class="shape"
+        x="0"
+        y="0"
+        :width="columnWidth * 0.5"
+        :height="rowHeight"
+        rx="4"
+        ry="4"
+      />
+      <delete-icon
+        class="icon"
+        x="0"
+        y="0"
+        :width="columnWidth * 0.5"
+        :height="rowHeight"
+      />
+      <rect
+        class="pointer-target"
+        x="0"
+        y="0"
+        :width="columnWidth * 0.5"
+        :height="rowHeight"
+      />
+    </g>
     <rect
       class="row-selection-highlight"
       x="0"
@@ -10,6 +40,7 @@
     <use
       v-for="(column, colIndex) in columns"
       :key="`symbol-${colIndex}`"
+      class="amidz-symbol"
       :href="referenceSymbol(column)"
       :x="colIndex * columnWidth"
       y="0"
@@ -32,7 +63,7 @@
       class="selection-grid temporary-grid"
       x="0"
       y="0"
-      :width="rowExpansionHandle.left"
+      :width="Math.max(0, rowExpansionHandle.left)"
       :height="rowHeight"
     />
     <g :transform="`translate(${rowExpansionHandle.left}, 0)`">
@@ -75,6 +106,7 @@ import { mapState } from 'vuex'
 import symbolUser from '@components/mixins/symbol-user'
 
 import ArrowIcon from '@mdi/svg/svg/arrow-left-right-bold.svg'
+import DeleteIcon from '@mdi/svg/svg/delete.svg'
 
 /* global process */
 
@@ -123,7 +155,8 @@ import ArrowIcon from '@mdi/svg/svg/arrow-left-right-bold.svg'
 export default {
   name: 'PatternRowEditor',
   components: {
-    ArrowIcon
+    ArrowIcon,
+    DeleteIcon
   },
   mixins: [
     symbolUser
@@ -170,6 +203,11 @@ export default {
     rowExpansionHandleClass () {
       return {
         'is-dragged': this.rowExpansionHandle.isDragged
+      }
+    },
+    dropRowAreaClass () {
+      return {
+        'is-active': this.rowExpansionHandle.left <= 0
       }
     }
   },
@@ -257,7 +295,12 @@ export default {
       }
       this.rowExpansionHandle.isDragged = false
       if (!isCancelled && (this.cellCount !== this.columns.length)) {
-        this.$emit('setting-column-count', { columnCount: this.cellCount })
+        // removes the row if cellCount is 0
+        if (this.cellCount > 0) {
+          this.$emit('setting-column-count', { columnCount: this.cellCount })
+        } else {
+          this.$emit('deleting-row')
+        }
       } else {
         // the row expansion handle may be dislocated.
         this.rowExpansionHandle.left = this.rowWidth
@@ -316,5 +359,26 @@ export default {
 .cell-to-delete {
   fill: gray;
   fill-opacity: 0.5;
+}
+
+.drop-row-area {
+  .shape {
+    fill: lightgray;
+  }
+  .icon {
+    fill: $theme-red;
+  }
+  .pointer-target {
+    @extend %glass-layer;
+  }
+
+  &.is-active {
+    .shape {
+      fill: gray;
+    }
+    .icon {
+      fill: $theme-red-dark;
+    }
+  }
 }
 </style>

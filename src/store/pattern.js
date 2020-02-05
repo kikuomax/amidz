@@ -64,6 +64,7 @@ const getters = {}
  * - [setSymbolAt]{@linkcode module:store.pattern.setSymbolAt}
  * - [setColumnCount]{@linkcode module:store.pattern.setColumnCount}
  * - [appendNewRow]{@linkcode module:store.pattern.appendNewRow}
+ * - [deleteRow]{@linkcode module:store.pattern.deleteRow}
  *
  * @member {object} mutations
  *
@@ -166,6 +167,31 @@ const mutations = {
       ]
     }
     rows.push(newRow)
+  },
+  /**
+   * (Mutation) Deletes a given row.
+   *
+   * @function deleteRow
+   *
+   * @param {object} state
+   *
+   *   `State` of the `pattern` store.
+   *
+   * @param {object} _
+   *
+   *   Has the following field,
+   *   - `rowIndex`: {`number`}
+   *     Index of the row to be deleted.
+   *
+   * @memberof module:store.pattern
+   */
+  deleteRow (state, { rowIndex }) {
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('[pattern].deleteRow')
+    }
+    const { patternData } = state
+    const { rows } = patternData
+    rows.splice(rowIndex, 1)
   }
 }
 
