@@ -60,6 +60,7 @@ export default {
       rowHeight
     } = this.$props
     return createElement(component, {
+      class: 'amidz-row',
       attrs: this.$attrs,
       props: {
         row,

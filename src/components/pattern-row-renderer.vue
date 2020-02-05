@@ -3,6 +3,7 @@
     <use
       v-for="(column, colIndex) in columns"
       :key="colIndex"
+      class="amidz-symbol"
       :href="referenceSymbol(column)"
       :x="colIndex * columnWidth"
       y="0"

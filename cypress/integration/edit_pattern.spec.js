@@ -28,9 +28,11 @@ describe('With a pattern editor', function () {
       .pointer('up')
     cy.get('@button')
       .should('not.have.class', 'is-pressed')
-    // TODO: too specific to the current implementation.
-    cy.get('g.edited-row use')
+    cy.get('g.edited-row .amidz-symbol')
       .should('have.length', 1)
+    // TODO: too specific to the current implementation.
+    cy.get('g.amidz-row')
+      .should('have.length', 3)
     cy.percySnapshot(`${testTitle()} [at pointerup]`)
   })
 
@@ -45,8 +47,8 @@ describe('With a pattern editor', function () {
     cy.get('@pointer-target')
       .pointer('up')
     // TODO: too specific to the current implementation.
-    cy.get('g.edited-row use')
-      .should('have.length', 3)
+    cy.get('g.amidz-row')
+      .should('have.length', 2)
   })
 
   it('Pressing of the add row button by a designer is cancelled', function () {
@@ -56,8 +58,8 @@ describe('With a pattern editor', function () {
     cy.get('g.add-row-button')
       .should('not.have.class', 'is-pressed')
     // TODO: too specific to the implementation details.
-    cy.get('g.edited-row use')
-      .should('have.length', 3)
+    cy.get('g.amidz-row')
+      .should('have.length', 2)
     cy.percySnapshot(`${testTitle()} [at pointercancel]`)
   })
 })

@@ -21,7 +21,7 @@ describe('With a pattern row editor', function () {
     cy.get('@handle-shape')
       .should('not.have.class', 'is-dragged')
     // TODO: too specific to the implementation details.
-    cy.get('g.edited-row use')
+    cy.get('g.edited-row .amidz-symbol')
       .should('have.length', 4)
     cy.percySnapshot(`${testTitle()} [at pointerup]`)
   })
@@ -41,7 +41,7 @@ describe('With a pattern row editor', function () {
     cy.get('@handle-shape')
       .should('not.have.class', 'is-dragged')
     // TODO: too specific to the implementation details.
-    cy.get('g.edited-row use')
+    cy.get('g.edited-row .amidz-symbol')
       .should('have.length', 2)
     cy.percySnapshot(`${testTitle()} [at pointerup]`)
   })
@@ -55,7 +55,7 @@ describe('With a pattern row editor', function () {
     cy.get('@handle')
       .pointer('up')
     // TODO: too specific to the implementation details.
-    cy.get('g.edited-row use')
+    cy.get('g.edited-row .amidz-symbol')
       .should('have.length', 3)
     cy.percySnapshot(`${testTitle()} [at pointerup]`)
   })
@@ -69,7 +69,7 @@ describe('With a pattern row editor', function () {
     cy.get('@handle')
       .pointer('up')
     // TODO: too specific to the implementation details.
-    cy.get('g.edited-row use')
+    cy.get('g.edited-row .amidz-symbol')
       .should('have.length', 3)
     cy.percySnapshot(`${testTitle()} [at pointerup]`)
   })
@@ -82,7 +82,7 @@ describe('With a pattern row editor', function () {
     cy.get('.row-expansion-handle-shape')
       .should('not.have.class', 'is-dragged')
     // TODO: too specific to the implementation details.
-    cy.get('g.edited-row use')
+    cy.get('g.edited-row .amidz-symbol')
       .should('have.length', 3)
     cy.percySnapshot(`${testTitle()} [at pointercancel]`)
   })
