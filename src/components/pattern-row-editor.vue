@@ -3,11 +3,11 @@
     <g
       v-show="rowExpansionHandle.isDragged"
       class="drop-row-area"
+      :class="dropRowAreaClass"
       :transform="`translate(-${columnWidth * 0.5}, 0)`"
     >
       <rect
-        class="drop-row-area-shape"
-        :class="dropRowAreaClass"
+        class="shape"
         x="0"
         y="0"
         :width="columnWidth * 0.5"
@@ -16,16 +16,14 @@
         ry="4"
       />
       <delete-icon
-        class="drop-row-area-icon"
-        :class="dropRowAreaClass"
+        class="icon"
         x="0"
         y="0"
         :width="columnWidth * 0.5"
         :height="rowHeight"
       />
       <rect
-        class="drop-row-area-pointer-target"
-        :class="dropRowAreaClass"
+        class="pointer-target"
         x="0"
         y="0"
         :width="columnWidth * 0.5"
@@ -363,23 +361,24 @@ export default {
   fill-opacity: 0.5;
 }
 
-.drop-row-area-shape {
-  fill: lightgray;
+.drop-row-area {
+  .shape {
+    fill: lightgray;
+  }
+  .icon {
+    fill: $theme-red;
+  }
+  .pointer-target {
+    @extend %glass-layer;
+  }
 
   &.is-active {
-    fill: gray;
+    .shape {
+      fill: gray;
+    }
+    .icon {
+      fill: $theme-red-dark;
+    }
   }
-}
-
-.drop-row-area-icon {
-  fill: $theme-red;
-
-  &.is-active {
-    fill: $theme-red-dark;
-  }
-}
-
-.drop-row-area-pointer-target {
-  @extend %glass-layer;
 }
 </style>

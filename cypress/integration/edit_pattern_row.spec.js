@@ -89,21 +89,17 @@ describe('With a pattern row editor', function () {
 
   it('A designer deletes a row by dragging the row expansion handle to the drop row area', function () {
     cy.get('.drop-row-area')
-      .as('area')
       .should('have.css', 'display', 'none')
     cy.get('.row-expansion-handle')
       .as('handle')
       .pointer('down')
-    cy.get('@area')
-      .should('not.have.css', 'display', 'none')
-    cy.get('.drop-row-area-shape')
-      .as('shape')
+    cy.get('.drop-row-area')
       .should('not.have.class', 'is-active')
-    cy.percySnapshot(`${testTitle()} [at pointerdown]`)
+      .should('not.have.css', 'display', 'none')
     // TODO: too specific to the implementation details.
     cy.get('@handle')
       .pointermoveBy({ dX: -3 * cellWidth })
-    cy.get('@shape')
+    cy.get('.drop-row-area')
       .should('have.class', 'is-active')
     cy.percySnapshot(`${testTitle()} [at pointermove]`)
     cy.get('@handle')
@@ -111,5 +107,6 @@ describe('With a pattern row editor', function () {
     // TODO: too specific to the implementation details.
     cy.get('g.amidz-row')
       .should('have.length', 1)
+    cy.percySnapshot(`${testTitle()} [at pointerup]`)
   })
 })
