@@ -2,6 +2,7 @@
   <g class="edited-row">
     <g
       v-show="rowExpansionHandle.isDragged"
+      class="drop-row-area"
       :transform="`translate(-${columnWidth * 0.5}, 0)`"
     >
       <rect
