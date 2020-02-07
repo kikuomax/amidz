@@ -25,6 +25,8 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 import HighlightBlur from '@components/svg/highlight-blur'
 import SymbolPicker from '@components/symbol-picker'
 import SymbolRegistry from '@components/symbol-registry'
@@ -71,8 +73,18 @@ export default {
     this.$emit('editor-ready', {
       requestSvgText: () => this.exportSvgText()
     })
+    // experimentally loads the current pattern
+    this.loadCurrentPattern()
+      .then(() => {
+        if (process.env.NODE_ENV !== 'production') {
+          console.log('[EditorContainer]', 'current pattern loaded')
+        }
+      })
   },
   methods: {
+    ...mapActions('pattern', [
+      'loadCurrentPattern'
+    ]),
     async exportSvgText () {
       if (process.env.NODE_ENV !== 'production') {
         console.log('[EditorContainer]', 'exporting an SVG image')

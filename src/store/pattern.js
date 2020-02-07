@@ -65,6 +65,7 @@ const getters = {}
  * - [setColumnCount]{@linkcode module:store.pattern.setColumnCount}
  * - [appendNewRow]{@linkcode module:store.pattern.appendNewRow}
  * - [deleteRow]{@linkcode module:store.pattern.deleteRow}
+ * - [replacePatternData]{@linkcode module:store.pattern.replacePatternData}
  *
  * @member {object} mutations
  *
@@ -192,14 +193,104 @@ const mutations = {
     const { patternData } = state
     const { rows } = patternData
     rows.splice(rowIndex, 1)
+  },
+  /**
+   * (Mutation) Replaces the pattern data with a given object.
+   *
+   * @function replacePatternData
+   *
+   * @param {object} state
+   *
+   *   `State` of the `pattern` store.
+   *
+   * @param {object} _
+   *
+   *   Has the following field,
+   *   - `patternData`: {`object`}
+   *     Pattern data to replace the state.
+   *
+   * @memberof module:store.pattern
+   */
+  replacePatternData (state, { patternData }) {
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('[pattern].replacePattern', patternData)
+    }
+    state.patternData = patternData
   }
 }
 
-const actions = {}
+/**
+ * (Action) Loads the current pattern from the database.
+ *
+ * Before registering this function as an actual action of a store,
+ * you have to bind the first argument `promisedDb`.
+ *
+ * @function loadCurrentPattern
+ *
+ * @param {Promise} promisedDb
+ *
+ *   `Promise` that will be resolved into an `IDBDatabase`.
+ *
+ * @param {object} _
+ *
+ *   Object supplied by Vuex.
+ *   Only `commit` is used.
+ *
+ * @memberof module:store.pattern
+ */
+function loadCurrentPattern (promisedDb, { commit }) {
+  return promisedDb
+    .then(db => {
+      return new Promise((resolve, reject) => {
+        const transaction = db.transaction('pattern', 'readonly')
+        transaction.oncomplete = event => {
+          if (process.env.NODE_ENV !== 'production') {
+            console.log('[pattern].loadCurrentPattern', 'oncomplete', event)
+          }
+        }
+        transaction.onerror = event => {
+          if (process.env.NODE_ENV !== 'production') {
+            console.log('[pattern].loadCurrentPattern', 'onerror', event)
+          }
+          reject('failed to load current pattern')
+        }
+        const patternStore = transaction.objectStore('pattern')
+        const getRequest = patternStore.get('$current')
+        getRequest.onsuccess = event => {
+          if (process.env.NODE_ENV !== 'production') {
+            console.log('[pattern].loadCurrentPattern', 'onsuccess', event)
+          }
+          const { result: patternData } = event.target
+          resolve(patternData)
+        }
+      })
+    })
+    .then(patternData => commit('replacePatternData', { patternData }))
+}
 
-export default {
-  state,
-  getters,
-  mutations,
-  actions
+/**
+ * Creates a new Vuex store module that manages the current pattern.
+ *
+ * @function createStore
+ *
+ * @param {Promise} promisedDb
+ *
+ *   `Promise` that will be resolved into an object like `IDBDatabase`.
+ *
+ * @return {object}
+ *
+ *   Vuex store module for the current pattern.
+ *
+ * @memberof module:store.pattern
+ */
+export function createStore (promisedDb) {
+  const actions = {
+    loadCurrentPattern: loadCurrentPattern.bind(null, promisedDb)
+  }
+  return {
+    state,
+    getters,
+    mutations,
+    actions
+  }
 }
