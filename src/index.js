@@ -61,12 +61,6 @@ const promisedDb = new Promise((resolve, reject) => {
           columns: [
             {
               symbolId: 'test-symbol2'
-            },
-            {
-              symbolId: 'blank-symbol'
-            },
-            {
-              symbolId: 'test-symbol'
             }
           ]
         }

@@ -4,6 +4,13 @@ describe('With a pattern editor', function () {
 
   beforeEach(function () {
     cy.visit('/')
+    // deletes the database and reloads the page
+    cy.window()
+      .then(window => {
+        expect(window.indexedDB).to.exist
+        window.indexedDB.deleteDatabase('AmidzDatabase')
+      })
+    cy.reload()
   })
 
   it('A designer clicks on a row to edit it', function () {

@@ -3,6 +3,13 @@ describe('With a pattern row editor', function () {
 
   beforeEach(function () {
     cy.visit('/')
+    // deletes the database and reloads the page
+    cy.window()
+      .then(window => {
+        expect(window.indexedDB).to.exist
+        window.indexedDB.deleteDatabase('AmidzDatabase')
+      })
+    cy.reload()
   })
 
   it('A designer appends a column to a row by dragging the row expansion handle rightward', function () {
