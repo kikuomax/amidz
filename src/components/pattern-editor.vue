@@ -15,8 +15,8 @@
         :transform="rowTransform(rowIndex)"
         :row-height="rowHeight"
         :is-edited="rowIndex === editedRowIndex"
-        @placing-symbol="setSymbolAt({ rowIndex, ...$event })"
-        @setting-column-count="setColumnCount({ rowIndex, ...$event })"
+        @placing-symbol="onPlacingSymbol({ rowIndex, ...$event })"
+        @setting-column-count="onSettingColumnCount({ rowIndex, ...$event })"
         @selecting-row="onSelectingRow(rowIndex)"
         @deleting-row="onDeletingRow(rowIndex)"
       />
@@ -26,6 +26,7 @@
 
 <script>
 import {
+  mapActions,
   mapMutations,
   mapState
 } from 'vuex'
@@ -91,9 +92,39 @@ export default {
       'setColumnCount',
       'setSymbolAt'
     ]),
+    ...mapActions('pattern', [
+      'saveCurrentPattern'
+    ]),
     rowTransform (rowIndex) {
       const y = this.patternHeight - ((rowIndex + 1) * this.rowHeight)
       return `translate(0, ${y})`
+    },
+    onPlacingSymbol ({ rowIndex, columnIndex, symbol }) {
+      if (process.env.NODE_ENV !== 'production') {
+        console.log(
+          '[PatternEditor]',
+          `placing symbol ${symbol} at (${rowIndex}, ${columnIndex})`)
+      }
+      this.setSymbolAt({
+        rowIndex,
+        columnIndex,
+        symbol
+      })
+      // TODO: there should be better place to trigger saving data
+      this.saveCurrentPattern()
+    },
+    onSettingColumnCount ({ rowIndex, columnCount }) {
+      if (process.env.NODE_ENV !== 'production') {
+        console.log(
+          '[PatternEditor]',
+          `setting column count of row ${rowIndex} to ${columnCount}`)
+      }
+      this.setColumnCount({
+        rowIndex,
+        columnCount
+      })
+      // TODO: there should be better place to trigger saving data
+      this.saveCurrentPattern()
     },
     onSelectingRow (rowIndex) {
       if (process.env.NODE_ENV !== 'production') {
@@ -107,6 +138,8 @@ export default {
       }
       this.deleteRow({ rowIndex })
       this.editedRowIndex = -1
+      // TODO: there should be better place to trigger saving data
+      this.saveCurrentPattern()
     },
     onAddRowButtonClicked () {
       if (process.env.NODE_ENV !== 'production') {
@@ -114,6 +147,8 @@ export default {
       }
       this.appendNewRow()
       this.editedRowIndex = this.rows.length - 1
+      // TODO: there should be better place to trigger saving data
+      this.saveCurrentPattern()
     }
   }
 }
