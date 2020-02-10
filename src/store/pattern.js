@@ -24,6 +24,8 @@
  *             - `symbolId`: {`string`}
  *               ID of the symbol associated with the column.
  *
+ *   A single blank cell by default.
+ *
  * @member {object} state
  *
  * @memberof module:store.pattern
@@ -34,20 +36,7 @@ const state = {
       {
         columns: [
           {
-            symbolId: 'test-symbol'
-          },
-          {
-            symbolId: 'test-symbol'
-          },
-          {
-            symbolId: 'test-symbol2'
-          }
-        ]
-      },
-      {
-        columns: [
-          {
-            symbolId: 'test-symbol2'
+            symbolId: 'blank-symbol'
           }
         ]
       }

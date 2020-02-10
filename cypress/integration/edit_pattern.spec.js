@@ -4,13 +4,14 @@ describe('With a pattern editor', function () {
 
   beforeEach(function () {
     cy.visit('/')
-    // deletes the database and reloads the page
-    cy.window()
       .then(window => {
+        // flushes the AmidzDatabase
+        // https://docs.cypress.io/api/commands/visit.html#Yields
         expect(window.indexedDB).to.exist
         window.indexedDB.deleteDatabase('AmidzDatabase')
       })
     cy.reload()
+    cy.wait(100) // TODO: is this long enough?
   })
 
   it('A designer clicks on a row to edit it', function () {
