@@ -11,7 +11,7 @@ describe('With a pattern editor', function () {
         window.indexedDB.deleteDatabase('AmidzDatabase')
       })
     cy.reload()
-    cy.wait(100) // TODO: is this long enough?
+    cy.wait(500) // TODO: is this long enough?
   })
 
   it('A designer clicks on a row to edit it', function () {
