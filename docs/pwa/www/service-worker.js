@@ -1,8 +1,8 @@
-importScripts("precache-manifest.3474e7491d7a1bae9ba3d0fa2c112fc1.js", "workbox-v4.3.1/workbox-sw.js");
+importScripts("precache-manifest.0acdab32281d672e5a78852437d0e46e.js", "workbox-v4.3.1/workbox-sw.js");
 workbox.setConfig({modulePathPrefix: "workbox-v4.3.1"});
 // change `CACHE_SUFFIX` when precached items are modified.
 const CACHE_PREFIX = 'amidz'
-const CACHE_SUFFIX = 'v2.5'
+const CACHE_SUFFIX = 'v2.6'
 
 /* global workbox */
 

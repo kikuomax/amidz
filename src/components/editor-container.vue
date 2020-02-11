@@ -1,5 +1,8 @@
 <template>
-  <div>
+  <div
+    class="editor-container"
+    :class="editorContainerClass"
+  >
     <div ref="svg-container">
       <svg
         ref="editor-svg"
@@ -21,10 +24,17 @@
       </svg>
     </div>
     <symbol-picker />
+    <b-loading
+      :is-full-page="false"
+      :active.sync="isLoadingPattern"
+      :can-cancel="false"
+    />
   </div>
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 import HighlightBlur from '@components/svg/highlight-blur'
 import SymbolPicker from '@components/symbol-picker'
 import SymbolRegistry from '@components/symbol-registry'
@@ -59,6 +69,17 @@ export default {
       svg: {
         width: 300,
         height: 200
+      },
+      // turns into false when a pattern is loaded from the database.
+      isLoadingPattern: true
+    }
+  },
+  computed: {
+    editorContainerClass () {
+      // a class `is-ready` does not matter to CSS so far,
+      // but it makes the application more testable.
+      return {
+        'is-ready': !this.isLoadingPattern
       }
     }
   },
@@ -71,8 +92,20 @@ export default {
     this.$emit('editor-ready', {
       requestSvgText: () => this.exportSvgText()
     })
+    // loads the current pattern
+    // TODO: is this the right place?
+    this.loadCurrentPattern()
+      .then(() => {
+        if (process.env.NODE_ENV !== 'production') {
+          console.log('[EditorContainer]', 'current pattern loaded')
+        }
+      })
+      .finally(() => this.isLoadingPattern = false)
   },
   methods: {
+    ...mapActions('pattern', [
+      'loadCurrentPattern'
+    ]),
     async exportSvgText () {
       if (process.env.NODE_ENV !== 'production') {
         console.log('[EditorContainer]', 'exporting an SVG image')
@@ -86,6 +119,14 @@ export default {
 </script>
 
 <style lang="scss">
+.editor-container {
+  /*
+   necessary for loading animation.
+   https://buefy.org/documentation/loading
+   */
+  position: relative;
+}
+
 .svg-container {
   width: 100%;
 }

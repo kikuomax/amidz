@@ -24,6 +24,8 @@
  *             - `symbolId`: {`string`}
  *               ID of the symbol associated with the column.
  *
+ *   A single blank cell by default.
+ *
  * @member {object} state
  *
  * @memberof module:store.pattern
@@ -34,20 +36,7 @@ const state = {
       {
         columns: [
           {
-            symbolId: 'test-symbol'
-          },
-          {
-            symbolId: 'test-symbol'
-          },
-          {
-            symbolId: 'test-symbol2'
-          }
-        ]
-      },
-      {
-        columns: [
-          {
-            symbolId: 'test-symbol2'
+            symbolId: 'blank-symbol'
           }
         ]
       }
@@ -65,6 +54,7 @@ const getters = {}
  * - [setColumnCount]{@linkcode module:store.pattern.setColumnCount}
  * - [appendNewRow]{@linkcode module:store.pattern.appendNewRow}
  * - [deleteRow]{@linkcode module:store.pattern.deleteRow}
+ * - [replacePatternData]{@linkcode module:store.pattern.replacePatternData}
  *
  * @member {object} mutations
  *
@@ -192,14 +182,181 @@ const mutations = {
     const { patternData } = state
     const { rows } = patternData
     rows.splice(rowIndex, 1)
+  },
+  /**
+   * (Mutation) Replaces the pattern data with a given object.
+   *
+   * @function replacePatternData
+   *
+   * @param {object} state
+   *
+   *   `State` of the `pattern` store.
+   *
+   * @param {object} _
+   *
+   *   Has the following field,
+   *   - `patternData`: {`object`}
+   *     Pattern data to replace the state.
+   *
+   * @memberof module:store.pattern
+   */
+  replacePatternData (state, { patternData }) {
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('[pattern].replacePattern', patternData)
+    }
+    state.patternData = patternData
   }
 }
 
-const actions = {}
+/**
+ * (Action) Saves the current pattern to the database.
+ *
+ * Before registering this function as an actual action of a store,
+ * you have to bind the first argument `promisedDb`.
+ *
+ * @function saveCurrentPattern
+ *
+ * @param {Promise} promisedDb
+ *
+ *   `Promise` that will be resolved into an `IDBDatabase`.
+ *
+ * @param {object} _
+ *
+ *   Context provided by Vuex.
+ *   Only `state` is used.
+ *
+ * @return {Promise}
+ *
+ *   Resolved when the save succeeds
+ *   Rejected when it fails.
+ *
+ * @memberof module:store.pattern
+ */
+function saveCurrentPattern (promisedDb, { state }) {
+  return promisedDb
+    .then(db => {
+      return new Promise((resolve, reject) => {
+        const transaction = db.transaction('pattern', 'readwrite')
+        transaction.oncomplete = event => {
+          if (process.env.NODE_ENV !== 'production') {
+            console.log('[pattern].saveCurrentPattern', 'oncomplete', event)
+          }
+        }
+        transaction.onerror = event => {
+          if (process.env.NODE_ENV !== 'production') {
+            console.log('[pattern].saveCurrentPattern', 'onerror', event)
+          }
+          reject(new Error('failed to save the current pattern'))
+        }
+        const patternStore = transaction.objectStore('pattern')
+        const putRequest = patternStore.put({
+          name: '$current',
+          ...state.patternData
+        })
+        putRequest.onsuccess = event => {
+          if (process.env.NODE_ENV !== 'production') {
+            console.log('[pattern].saveCurrentPattern', 'onsuccess', event)
+          }
+          resolve()
+        }
+      })
+    })
+}
 
-export default {
-  state,
-  getters,
-  mutations,
-  actions
+/**
+ * (Action) Loads the current pattern from the database.
+ *
+ * Before registering this function as an actual action of a store,
+ * you have to bind the first argument `promisedDb`.
+ *
+ * @function loadCurrentPattern
+ *
+ * @param {Promise} promisedDb
+ *
+ *   `Promise` that will be resolved into an `IDBDatabase`.
+ *
+ * @param {object} _
+ *
+ *   Object supplied by Vuex.
+ *   Only `commit` is used.
+ *
+ * @return {Promise}
+ *
+ *   Resolved when the loading ends.
+ *   Rejected when it fails.
+ *
+ * @memberof module:store.pattern
+ */
+function loadCurrentPattern (promisedDb, { commit }) {
+  return promisedDb
+    .then(db => {
+      return new Promise((resolve, reject) => {
+        const transaction = db.transaction('pattern', 'readonly')
+        transaction.oncomplete = event => {
+          if (process.env.NODE_ENV !== 'production') {
+            console.log('[pattern].loadCurrentPattern', 'oncomplete', event)
+          }
+        }
+        transaction.onerror = event => {
+          if (process.env.NODE_ENV !== 'production') {
+            console.log('[pattern].loadCurrentPattern', 'onerror', event)
+          }
+          reject(new Error('failed to load current pattern'))
+        }
+        const patternStore = transaction.objectStore('pattern')
+        const getRequest = patternStore.get('$current')
+        getRequest.onsuccess = event => {
+          if (process.env.NODE_ENV !== 'production') {
+            console.log('[pattern].loadCurrentPattern', 'onsuccess', event)
+          }
+          const { result: patternData } = event.target
+          resolve(patternData)
+        }
+      })
+    })
+    .then(patternData => commit('replacePatternData', { patternData }))
+}
+
+/**
+ * Creates a new Vuex store module that manages the current pattern.
+ *
+ * @function createStore
+ *
+ * @param {Promise} promisedDb
+ *
+ *   `Promise` that will be resolved into an object like `IDBDatabase`.
+ *
+ * @return {object}
+ *
+ *   Vuex store module for the current pattern.
+ *
+ * @memberof module:store.pattern
+ */
+export function createStore (promisedDb) {
+  /**
+   * `Actions` of the current pattern.
+   *
+   * This object is initialized in
+   * [createStore]{@linkcode module:store.pattern.createStore}
+   *
+   * The following functions are defined,
+   * - [saveCurrentPattern]{@linkcode module:store.pattern.saveCurrentPattern}
+   *   with `promisedDb` bound.
+   * - [loadCurrentPattern]{@linkcode module:store.pattern.loadCurrentPattern}
+   *   with `promisedDb` bound.
+   *
+   * @member actions
+   *
+   * @memberof module:store.pattern
+   */
+  const actions = {
+    saveCurrentPattern: saveCurrentPattern.bind(null, promisedDb),
+    loadCurrentPattern: loadCurrentPattern.bind(null, promisedDb)
+  }
+  return {
+    state,
+    getters,
+    mutations,
+    actions
+  }
 }
