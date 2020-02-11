@@ -4,13 +4,6 @@ describe('With a pattern editor', function () {
 
   beforeEach(function () {
     cy.visit('/')
-      .then(window => {
-        // flushes the AmidzDatabase
-        // https://docs.cypress.io/api/commands/visit.html#Yields
-        expect(window.indexedDB).to.exist
-        window.indexedDB.deleteDatabase('AmidzDatabase')
-      })
-    cy.reload()
     // waits until the editor container gets ready.
     cy.get('.editor-container')
       .should('have.class', 'is-ready')
@@ -19,6 +12,23 @@ describe('With a pattern editor', function () {
     // https://github.com/buefy/buefy/blob/8bb52c28d647798d48a52467dc5747fdb4d0025e/src/components/loading/Loading.vue#L4
     cy.get('.editor-container .loading-overlay')
       .should('not.exist')
+  })
+
+  afterEach(function () {
+    // flushes AmidzDatabase
+    cy.window()
+      .then(window => {
+        expect(window).to.exist
+        return new Cypress.Promise((resolve, reject) => {
+          const request = window.indexedDB.deleteDatabase('AmidzDatabase')
+          request.onsuccess = () => {
+            resolve()
+          }
+          request.onerror = () => {
+            reject(new Error('failed to flush AmidzDatabase'))
+          }
+        })
+      })
   })
 
   it('A designer clicks on a row to edit it', function () {

@@ -9,6 +9,8 @@ Vue.use(Buefy)
 const AMIDZ_DATABASE_NAME = 'AmidzDatabase'
 const AMIDZ_DATABASE_VERSION = 1
 
+/* global process */
+
 const promisedDb = new Promise((resolve, reject) => {
   if (!window.indexedDB) {
     console.log('oh my goodness! no IndexedDB is available')
@@ -21,6 +23,17 @@ const promisedDb = new Promise((resolve, reject) => {
   openRequest.onsuccess = function (event) {
     console.log('indexedDB.open', 'onsuccess', event)
     const { result: db } = event.target
+    // closes the database when `versionchange` is fired, that is fired
+    // when `deleteDatabase` is applied.
+    // if you do not close the database in response to `deleteDatabase`,
+    // E2E tests will block because they try to flush database every time.
+    // https://github.com/kikuomax/amidz/issues/35#issuecomment-584646557
+    db.onversionchange = event => {
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('onversionchange', event)
+      }
+      db.close()
+    }
     resolve(db)
   }
   openRequest.onerror = function (event) {
