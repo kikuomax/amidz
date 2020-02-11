@@ -11,7 +11,9 @@ describe('With a pattern editor', function () {
         window.indexedDB.deleteDatabase('AmidzDatabase')
       })
     cy.reload()
-    cy.wait(500) // TODO: is this long enough?
+    // waits until the editor container gets ready.
+    cy.get('.editor-container')
+      .should('have.class', 'is-ready')
   })
 
   it('A designer clicks on a row to edit it', function () {

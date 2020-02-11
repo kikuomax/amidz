@@ -10,7 +10,9 @@ describe('With a pattern row editor', function () {
         window.indexedDB.deleteDatabase('AmidzDatabase')
       })
     cy.reload()
-    cy.wait(500) // TODO: is this long enough?
+    // waits until the editor container gets ready.
+    cy.get('.editor-container')
+      .should('have.class', 'is-ready')
   })
 
   it('A designer appends a column to a row by dragging the row expansion handle rightward', function () {
