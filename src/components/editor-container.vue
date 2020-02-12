@@ -125,6 +125,10 @@ export default {
    https://buefy.org/documentation/loading
    */
   position: relative;
+  width: 100%;
+  /* 100% height with a room for the symbol picker at the bottom. */
+  height: 100vh;
+  padding-bottom: 60px;
 }
 
 .svg-container {

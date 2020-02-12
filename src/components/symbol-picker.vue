@@ -46,6 +46,9 @@ import {
 /**
  * Vue component representing a symbol picker.
  *
+ * This component is supposed to be embedded in the
+ * [EditorContainer]{@linkcode module:components.EditorContainer} component.
+ *
  * A symbol picked in this component is set to the `symbolToPlace`
  * [state]{@linkcode module:store.pattern-editor.state} of
  * the {@linkcode module:store.pattern-editor} store.
@@ -93,21 +96,36 @@ export default {
 }
 </script>
 
-<style>
-.symbol-picker div.dropdown-content {
-  max-width: 100%;
-  white-space: nowrap;
-  overflow-x: auto;
-  padding-left: 4px;
-  padding-right: 4px;
+<style lang="scss">
+.symbol-picker {
+  /*
+   sticks to the bottom of the editor container.
+   the `position` of the editor container has to be `relative`.
+   */
+  position: fixed;
+  bottom: 0;
+  margin-bottom: 4px;
+  margin-left: 4px;
+
+  div {
+    &.dropdown-content {
+      max-width: 100%;
+      white-space: nowrap;
+      overflow-x: auto;
+      padding-left: 4px;
+      padding-right: 4px;
+    }
+  }
 }
 
-button.icon.symbol-icon {
-  padding: 0;
-}
+button {
+  &.symbol-icon {
+    padding: 0;
 
-.icon.is-large.symbol-icon img {
-  width: 1.5em;
-  height: 1.5em;
+    img {
+      width: 1.5em;
+      height: 1.5em;
+    }
+  }
 }
 </style>
