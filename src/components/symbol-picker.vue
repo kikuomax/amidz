@@ -20,7 +20,7 @@
     >
       <div class="dropdown-content">
         <div style="position:fixed;">
-          <p>Pick a symbol to place.</p>
+          <p>{{ $t('symbol-picker.pick-symbol') }}</p>
         </div>
         <div style="margin-top:1.5em;">
           <button

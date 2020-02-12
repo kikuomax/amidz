@@ -1,9 +1,11 @@
 import Vue from 'vue'
 import Buefy from 'buefy'
+import VueI18n from 'vue-i18n'
 
 import 'buefy/dist/buefy.css'
 
 Vue.use(Buefy)
+Vue.use(VueI18n)
 
 // experimental IndexedDB
 const AMIDZ_DATABASE_NAME = 'AmidzDatabase'
@@ -93,9 +95,18 @@ import { createStore } from '@store'
 
 import AppContainer from '@components/app-container'
 
+import { messages } from '@i18n'
+
+const locale = 'ja'
+const i18n = new VueI18n({
+  locale,
+  messages
+})
+
 new Vue({
   el: '#app',
   store: createStore(promisedDb),
   render: h => h(AppContainer),
+  i18n,
   router
 })
