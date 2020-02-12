@@ -60,10 +60,10 @@ export default {
   methods: {
     notifyInstallable () {
       this.$buefy.snackbar.open({
-        message: 'Amidz can be installed as an App',
+        message: this.$t('install-pwa.can-be-installed'),
         type: 'is-info',
         position: 'is-bottom',
-        actionText: 'Install',
+        actionText: this.$t('install-pwa.install'),
         onAction: () => this.installPwa()
       })
     },

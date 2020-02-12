@@ -1,25 +1,5 @@
 <template>
   <div>
-    <h1 class="title is-1">
-      Main Screen
-    </h1>
-    <div style="margin-bottom: 1em;">
-      <button
-        class="button is-primary"
-        @click="saveSvg"
-      >
-        Save SVG
-      </button>
-      <a
-        class="button is-link"
-        :href="svgDownloadUrl"
-        :download="svgDownloadName"
-        :disabled="svgDownloadUrl === '#'"
-        @click="downloadSvg"
-      >
-        Download SVG
-      </a>
-    </div>
     <router-view
       @editor-ready="onEditorReady"
     />
