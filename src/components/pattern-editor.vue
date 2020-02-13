@@ -8,23 +8,25 @@
       @click="onAddRowButtonClicked"
     />
     <g :transform="`translate(${marginLeft}, ${rowHeight})`">
-      <pattern-row
+      <pattern-row-renderer
         v-for="rowIndex in rowIndicesNotEdited"
         :key="`row-${rowIndex}`"
         :row="rows[rowIndex]"
         :transform="rowTransform(rowIndex)"
+        :column-width="columnWidth"
         :row-height="rowHeight"
         :is-edited="false"
         @selecting-row="onSelectingRow(rowIndex)"
       />
-      <pattern-row
+      <pattern-row-editor
         v-if="editedRow"
         :row="editedRow"
         :transform="rowTransform(editedRowIndex)"
+        :column-width="columnWidth"
         :row-height="rowHeight"
         :is-edited="true"
-        @placing-symbol="onPlacingSymbol({ rowIndex: editedRowIndex, ...$event })"
-        @setting-column-count="onSettingColumnCount({ rowIndex: editedRowIndex, ...$event })"
+        @placing-symbol="onPlacingSymbol(editedRowIndex, $event)"
+        @setting-column-count="onSettingColumnCount(editedRowIndex, $event)"
         @deleting-row="onDeletingRow(editedRowIndex)"
       />
     </g>
@@ -39,8 +41,8 @@ import {
 } from 'vuex'
 
 import AddRowButton from '@components/add-row-button'
-import PatternRow from '@components/pattern-row'
-
+import PatternRowEditor from '@components/pattern-row-editor'
+import PatternRowRenderer from '@components/pattern-row-renderer'
 
 /* global process */
 
@@ -63,7 +65,8 @@ export default {
   name: 'PatternEditor',
   components: {
     AddRowButton,
-    PatternRow
+    PatternRowEditor,
+    PatternRowRenderer
   },
   props: {
     columnWidth: {
@@ -118,7 +121,7 @@ export default {
       const y = this.patternHeight - ((rowIndex + 1) * this.rowHeight)
       return `translate(0, ${y})`
     },
-    onPlacingSymbol ({ rowIndex, columnIndex, symbol }) {
+    onPlacingSymbol (rowIndex, { columnIndex, symbol }) {
       if (process.env.NODE_ENV !== 'production') {
         console.log(
           '[PatternEditor]',
@@ -132,7 +135,7 @@ export default {
       // TODO: there should be better place to trigger saving data
       this.saveCurrentPattern()
     },
-    onSettingColumnCount ({ rowIndex, columnCount }) {
+    onSettingColumnCount (rowIndex, { columnCount }) {
       if (process.env.NODE_ENV !== 'production') {
         console.log(
           '[PatternEditor]',
