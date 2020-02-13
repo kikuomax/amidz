@@ -9,16 +9,23 @@
     />
     <g :transform="`translate(${marginLeft}, ${rowHeight})`">
       <pattern-row
-        v-for="(row, rowIndex) in patternData.rows"
-        :key="rowIndex"
-        :row="row"
+        v-for="rowIndex in rowIndicesNotEdited"
+        :key="`row-${rowIndex}`"
+        :row="rows[rowIndex]"
         :transform="rowTransform(rowIndex)"
         :row-height="rowHeight"
-        :is-edited="rowIndex === editedRowIndex"
-        @placing-symbol="onPlacingSymbol({ rowIndex, ...$event })"
-        @setting-column-count="onSettingColumnCount({ rowIndex, ...$event })"
+        :is-edited="false"
         @selecting-row="onSelectingRow(rowIndex)"
-        @deleting-row="onDeletingRow(rowIndex)"
+      />
+      <pattern-row
+        v-if="editedRow"
+        :row="editedRow"
+        :transform="rowTransform(editedRowIndex)"
+        :row-height="rowHeight"
+        :is-edited="true"
+        @placing-symbol="onPlacingSymbol({ rowIndex: editedRowIndex, ...$event })"
+        @setting-column-count="onSettingColumnCount({ rowIndex: editedRowIndex, ...$event })"
+        @deleting-row="onDeletingRow(editedRowIndex)"
       />
     </g>
   </g>
@@ -70,6 +77,8 @@ export default {
   },
   data () {
     return {
+      // index of the row that is being edited.
+      // -1 if there is no such row.
       editedRowIndex: 0,
       marginLeft: 30
     }
@@ -83,6 +92,16 @@ export default {
     },
     patternHeight () {
       return this.rowHeight * this.rows.length
+    },
+    editedRow () {
+      return (this.editedRowIndex !== -1) ?
+        this.rows[this.editedRowIndex] :
+        null
+    },
+    // indices of rows that are not being edited.
+    rowIndicesNotEdited () {
+      return [...this.rows.keys()]
+        .filter(i => i !== this.editedRowIndex)
     }
   },
   methods: {

@@ -1,15 +1,26 @@
 <template>
   <g class="rendered-row">
-    <use
+    <g
       v-for="(column, colIndex) in columns"
-      :key="colIndex"
-      class="amidz-symbol"
-      :href="referenceSymbol(column)"
-      :x="colIndex * columnWidth"
-      y="0"
-      :width="columnWidth"
-      :height="rowHeight"
-    />
+      :key="`symbol-${colIndex}`"
+      :transform="columnTransform(colIndex)"
+    >
+      <rect
+        class="cell-grid"
+        x="0"
+        y="0"
+        :width="columnWidth"
+        :height="rowHeight"
+      />
+      <use
+        class="amidz-symbol"
+        :href="referenceSymbol(column)"
+        x="0"
+        y="0"
+        :width="columnWidth"
+        :height="rowHeight"
+      />
+    </g>
     <rect
       class="row-selection-layer"
       x="0"
@@ -75,6 +86,11 @@ export default {
     rowWidth () {
       return this.columnWidth * this.columns.length
     }
+  },
+  methods: {
+    columnTransform (columnIndex) {
+      return `translate(${columnIndex * this.columnWidth}, 0)`
+    }
   }
 }
 </script>
@@ -84,5 +100,13 @@ export default {
 
 .row-selection-layer {
   @extend %glass-layer;
+}
+
+.cell-grid {
+  stroke: lightgray;
+  stroke-width: 1;
+  stroke-dasharray: 2 2;
+  fill: white;
+  fill-opacity: 1.0;
 }
 </style>
