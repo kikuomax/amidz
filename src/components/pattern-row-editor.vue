@@ -1,5 +1,5 @@
 <template>
-  <g class="edited-row">
+  <g class="amidz-row edited-row">
     <g
       v-show="rowExpansionHandle.isDragged"
       class="drop-row-area"

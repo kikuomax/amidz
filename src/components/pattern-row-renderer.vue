@@ -1,5 +1,5 @@
 <template>
-  <g class="rendered-row">
+  <g class="amidz-row rendered-row">
     <g
       v-for="(column, colIndex) in columns"
       :key="`symbol-${colIndex}`"
