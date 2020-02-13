@@ -8,17 +8,26 @@
       @click="onAddRowButtonClicked"
     />
     <g :transform="`translate(${marginLeft}, ${rowHeight})`">
-      <pattern-row
-        v-for="(row, rowIndex) in patternData.rows"
-        :key="rowIndex"
-        :row="row"
+      <pattern-row-renderer
+        v-for="rowIndex in rowIndicesNotEdited"
+        :key="`row-${rowIndex}`"
+        :row="rows[rowIndex]"
         :transform="rowTransform(rowIndex)"
+        :column-width="columnWidth"
         :row-height="rowHeight"
-        :is-edited="rowIndex === editedRowIndex"
-        @placing-symbol="onPlacingSymbol({ rowIndex, ...$event })"
-        @setting-column-count="onSettingColumnCount({ rowIndex, ...$event })"
+        :is-edited="false"
         @selecting-row="onSelectingRow(rowIndex)"
-        @deleting-row="onDeletingRow(rowIndex)"
+      />
+      <pattern-row-editor
+        v-if="editedRow"
+        :row="editedRow"
+        :transform="rowTransform(editedRowIndex)"
+        :column-width="columnWidth"
+        :row-height="rowHeight"
+        :is-edited="true"
+        @placing-symbol="onPlacingSymbol(editedRowIndex, $event)"
+        @setting-column-count="onSettingColumnCount(editedRowIndex, $event)"
+        @deleting-row="onDeletingRow(editedRowIndex)"
       />
     </g>
   </g>
@@ -32,8 +41,8 @@ import {
 } from 'vuex'
 
 import AddRowButton from '@components/add-row-button'
-import PatternRow from '@components/pattern-row'
-
+import PatternRowEditor from '@components/pattern-row-editor'
+import PatternRowRenderer from '@components/pattern-row-renderer'
 
 /* global process */
 
@@ -56,7 +65,8 @@ export default {
   name: 'PatternEditor',
   components: {
     AddRowButton,
-    PatternRow
+    PatternRowEditor,
+    PatternRowRenderer
   },
   props: {
     columnWidth: {
@@ -70,6 +80,8 @@ export default {
   },
   data () {
     return {
+      // index of the row that is being edited.
+      // -1 if there is no such row.
       editedRowIndex: 0,
       marginLeft: 30
     }
@@ -83,6 +95,16 @@ export default {
     },
     patternHeight () {
       return this.rowHeight * this.rows.length
+    },
+    editedRow () {
+      return (this.editedRowIndex !== -1) ?
+        this.rows[this.editedRowIndex] :
+        null
+    },
+    // indices of rows that are not being edited.
+    rowIndicesNotEdited () {
+      return [...this.rows.keys()]
+        .filter(i => i !== this.editedRowIndex)
     }
   },
   methods: {
@@ -99,7 +121,7 @@ export default {
       const y = this.patternHeight - ((rowIndex + 1) * this.rowHeight)
       return `translate(0, ${y})`
     },
-    onPlacingSymbol ({ rowIndex, columnIndex, symbol }) {
+    onPlacingSymbol (rowIndex, { columnIndex, symbol }) {
       if (process.env.NODE_ENV !== 'production') {
         console.log(
           '[PatternEditor]',
@@ -113,7 +135,7 @@ export default {
       // TODO: there should be better place to trigger saving data
       this.saveCurrentPattern()
     },
-    onSettingColumnCount ({ rowIndex, columnCount }) {
+    onSettingColumnCount (rowIndex, { columnCount }) {
       if (process.env.NODE_ENV !== 'production') {
         console.log(
           '[PatternEditor]',
