@@ -15,11 +15,14 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: sudo apt-get install google-chrome-stable
-    - run: npm ci
-    - run: npm run build
-    - run: npm test
-    - name: E2E Test
-      run: |
-        npm run dev &
-        npx wait-on http-get://localhost:8080 && npm run cypress:run
+    # runs E2E test with Cypress
+    # it also resolves dependencies
+    - name: Run Cypress
+      uses: cypress-io/github-action@v1
+      with:
+        build: npm run build
+        start: npm run dev
+        wait-on: 'http-get://localhost:8080'
+        # this action bypasses cypress:run command in package.json
+        command-prefix: 'percy exec -- npx'
+        cache-key: node-v${{ matrix.node-version }}-on-${{ runner.os }}-hash-${{ hashFiles('package-lock.json') }}
