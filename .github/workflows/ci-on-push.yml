@@ -17,7 +17,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
     # runs E2E test with Cypress
     # it also resolves dependencies
-    - name: Run Cypress
+    - name: Run Cypress with Percy ${{ ((matrix.node-version == '12.x') && (endsWith(github.ref, '/actions') || endsWith(github.base_ref, '/master')) && secrets.NOT_ACTUALLY_A_SECRET) || '' }} 
       uses: cypress-io/github-action@v1
       with:
         build: npm run build
@@ -33,5 +33,4 @@ jobs:
         # - Node.js is 12.x
         # - The target branch is master
         # - secrets.PERCY_TOKEN is supplied
-        PERCY_TOKEN: |
-          ${{ ((matrix.node-version == '12.x') && (endsWith(github.ref, '/actions') || endsWith(github.base_ref, '/master')) && secrets.PERCY_TOKEN) || '' }}
+        PERCY_TOKEN: "${{ ((matrix.node-version == '12.x') && (endsWith(github.ref, '/actions') || endsWith(github.base_ref, '/master')) && secrets.PERCY_TOKEN) || '' }}"
