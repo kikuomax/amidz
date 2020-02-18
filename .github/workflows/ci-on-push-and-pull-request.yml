@@ -21,7 +21,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
     # runs E2E test with Cypress
     # it also resolves dependencies
-    - name: "Run Cypress${{ ((matrix.node-version == '12.x') && (endsWith(github.ref, '/master') || endsWith(github.base_ref, '/master')) && ' with Percy') || '' }}"
+    - name: "Run Cypress${{ ((matrix.node-version == '12.x') && (endsWith(github.ref, '/master') || (github.event_name == 'pull_request')) && ' with Percy') || '' }}"
       uses: cypress-io/github-action@v1
       with:
         build: npm run build
@@ -37,4 +37,6 @@ jobs:
         # - Node.js is 12.x
         # - The target branch is master
         # - secrets.PERCY_TOKEN is supplied
-        PERCY_TOKEN: "${{ ((matrix.node-version == '12.x') && (endsWith(github.ref, '/master') || endsWith(github.base_ref, '/master')) && secrets.PERCY_TOKEN) || '' }}"
+        #
+        # NOTE: pull request is triggered only on master
+        PERCY_TOKEN: "${{ ((matrix.node-version == '12.x') && (endsWith(github.ref, '/master') || (github.event_name == 'pull_request')) && secrets.PERCY_TOKEN) || '' }}"
