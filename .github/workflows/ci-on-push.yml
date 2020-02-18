@@ -15,7 +15,7 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - name: Setting PERCY_TOKEN
+    - name: Setting PERCY_TOKEN on ${{ github.ref }} ${{ github.base_ref }}
       run: echo "::set-env name=PERCY_TOKEN::${{ github.ref }}"
       if: |
         github.ref == 'actions'
