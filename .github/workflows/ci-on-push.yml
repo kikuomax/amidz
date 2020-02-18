@@ -22,7 +22,9 @@ jobs:
       with:
         build: npm run build
         start: npm run dev
-        wait-on: 'http-get://localhost:8080'
+        # this action uses `got` module instead of `wait-on`.
+        # as `got` uses `GET` by default, the normal URL should work.
+        wait-on: 'http://localhost:8080'
         # this action bypasses cypress:run command in package.json
         command-prefix: 'percy exec -- npx'
         cache-key: node-v${{ matrix.node-version }}-on-${{ runner.os }}-hash-${{ hashFiles('package-lock.json') }}
