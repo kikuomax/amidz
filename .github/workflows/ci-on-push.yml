@@ -9,16 +9,15 @@ jobs:
       matrix:
         node-version: [10.x, 12.x]
     steps:
-    - name: Conditional Env Test
-      run: echo ${TEST_INPUT}
-      env:
-        TEST_INPUT: ${{ (((github.ref == 'master') || (github.base_ref == 'master')) && 'Target is master') || 'Target is not master' }}
     - name: Checkout
       uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
+    - name: Setting PERCY_TOKEN
+      run: echo "::set-env name=PERCY_TOKE::${{ github.ref }}"
+      if: ${{ (github.ref == 'actions') || (github.base_ref == 'master') }}
     # runs E2E test with Cypress
     # it also resolves dependencies
     - name: Run Cypress
@@ -32,6 +31,3 @@ jobs:
         # this action bypasses cypress:run command in package.json
         command-prefix: 'percy exec -- npx'
         cache-key: node-v${{ matrix.node-version }}-on-${{ runner.os }}-hash-${{ hashFiles('package-lock.json') }}
-      env:
-        # PERCY_TOKEN is available only if the target branch is master.
-        PERCY_TOKEN: ${{ (((github.ref == 'master') || (github.base_ref == 'master')) && secrets.PERCY_TOKEN) || '' }}
