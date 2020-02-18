@@ -15,10 +15,6 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - name: Setting PERCY_TOKEN on ${{ github.ref }} ${{ github.base_ref }}
-      run: echo "::set-env name=PERCY_TOKEN::${{ ((endsWith(github.ref, '/master') || endsWith(github.base_ref, '/master')) && 'master') || 'other branch'  }}"
-      if: |
-        (matrix.node-version == '12.x') && endsWith(github.ref, '/actions')
     # runs E2E test with Cypress
     # it also resolves dependencies
     - name: Run Cypress
@@ -32,3 +28,6 @@ jobs:
         # this action bypasses cypress:run command in package.json
         command-prefix: 'percy exec -- npx'
         cache-key: node-v${{ matrix.node-version }}-on-${{ runner.os }}-hash-${{ hashFiles('package-lock.json') }}
+      env:
+        PERCY_TOKEN: |
+          ${{ ((endsWith(github.ref, '/actions') || endsWith(github.base_ref, '/master')) && secrets.NOT_ACTUALLY_A_SECRET) || '' }}
