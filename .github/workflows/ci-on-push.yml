@@ -28,3 +28,5 @@ jobs:
         # this action bypasses cypress:run command in package.json
         command-prefix: 'percy exec -- npx'
         cache-key: node-v${{ matrix.node-version }}-on-${{ runner.os }}-hash-${{ hashFiles('package-lock.json') }}
+      env:
+        PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
