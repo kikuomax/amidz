@@ -9,6 +9,10 @@ jobs:
       matrix:
         node-version: [10.x, 12.x]
     steps:
+    - name: Conditional Env Test
+      run: echo ${TEST_INPUT}
+      env:
+        TEST_INPUT: ${{ (((github.ref == 'master') || (github.base_ref == 'master')) && 'Target is master') || 'Target is not master' }}
     - name: Checkout
       uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
@@ -29,4 +33,5 @@ jobs:
         command-prefix: 'percy exec -- npx'
         cache-key: node-v${{ matrix.node-version }}-on-${{ runner.os }}-hash-${{ hashFiles('package-lock.json') }}
       env:
-        PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
+        # PERCY_TOKEN is available only if the target branch is master.
+        PERCY_TOKEN: ${{ (((github.ref == 'master') || (github.base_ref == 'master')) && secrets.PERCY_TOKEN) || '' }}
