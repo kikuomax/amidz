@@ -29,5 +29,8 @@ jobs:
         command-prefix: 'percy exec -- npx'
         cache-key: node-v${{ matrix.node-version }}-on-${{ runner.os }}-hash-${{ hashFiles('package-lock.json') }}
       env:
+        # PERCY_TOKEN is supplied if
+        # - Node.js is 12.x
+        # - The target branch is master
         PERCY_TOKEN: |
-          ${{ ((endsWith(github.ref, '/actions') || endsWith(github.base_ref, '/master')) && secrets.NOT_ACTUALLY_A_SECRET) || '' }}
+          ${{ ((matrix.node-version == '12.x') && (endsWith(github.ref, '/actions') || endsWith(github.base_ref, '/master')) && secrets.NOT_ACTUALLY_A_SECRET) || '' }}
