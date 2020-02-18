@@ -17,7 +17,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - name: Setting PERCY_TOKEN
       run: echo "::set-env name=PERCY_TOKE::${{ github.ref }}"
-      if: ${{ (github.ref == 'actions') || (github.base_ref == 'master') }}
+      if: (github.ref == 'actions') || (github.base_ref == 'master')
     # runs E2E test with Cypress
     # it also resolves dependencies
     - name: Run Cypress
