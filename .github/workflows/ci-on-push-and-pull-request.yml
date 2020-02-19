@@ -1,0 +1,42 @@
+name: Continuous Integration
+on:
+  push:
+  pull_request:
+    branches:
+    - master
+
+jobs:
+  build:
+    name: Build and Test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [10.x, 12.x]
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    # runs E2E test with Cypress
+    # it also resolves dependencies
+    - name: "Run Cypress${{ ((matrix.node-version == '12.x') && (endsWith(github.ref, '/master') || (github.event_name == 'pull_request')) && ' with Percy') || '' }}"
+      uses: cypress-io/github-action@v1
+      with:
+        build: npm run build
+        start: npm run dev
+        # this action uses `got` module instead of `wait-on`.
+        # as `got` uses `GET` by default, the normal URL should work.
+        wait-on: 'http://localhost:8080'
+        # this action bypasses cypress:run command in package.json
+        command-prefix: 'percy exec -- npx'
+        cache-key: node-v${{ matrix.node-version }}-on-${{ runner.os }}-hash-${{ hashFiles('package-lock.json') }}
+      env:
+        # PERCY_TOKEN is supplied if all of the following conditions are met,
+        # - Node.js is 12.x
+        # - The target branch is master
+        # - secrets.PERCY_TOKEN is supplied
+        #
+        # NOTE: pull request is triggered only on master
+        PERCY_TOKEN: "${{ ((matrix.node-version == '12.x') && (endsWith(github.ref, '/master') || (github.event_name == 'pull_request')) && secrets.PERCY_TOKEN) || '' }}"
