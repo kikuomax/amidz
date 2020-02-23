@@ -69,71 +69,40 @@
       :width="Math.max(0, rowExpansionHandle.left)"
       :height="rowHeight"
     />
-    <g :transform="`translate(${rowExpansionHandle.left}, 0)`">
-      <rect
-        class="row-expansion-handle-shape"
-        :class="rowExpansionHandleClass"
-        x="0"
-        y="0"
-        :width="columnWidth * 0.5"
-        :height="rowHeight"
-        rx="4"
-        ry="4"
-      />
-      <arrow-icon
-        class="arrow-icon"
-        :class="rowExpansionHandleClass"
-        :width="columnWidth * 0.5"
-        :height="rowHeight"
-      />
-      <rect
-        ref="row-expansion-handle"
-        class="row-expansion-handle"
-        x="0"
-        y="0"
-        :width="columnWidth * 0.5"
-        :height="rowHeight"
-        @pointerdown="onRowExpansionHandlePressed"
-        @touchstart="onRowExpansionHandleTouched"
-        @pointermove="onRowExpansionHandleDragged"
-        @pointerup="onRowExpansionHandleReleased"
-        @pointercancel="onRowExpansionHandleReleased($event, true)"
-      />
-    </g>
-    <g
-      v-show="!rowExpansionHandle.isDragged"
-      :transform="`translate(${0.5 * (rowWidth - columnWidth)}, ${-0.5 * rowHeight})`"
-      class="row-move-handle"
-      :class="rowMoveHandleClass"
+    <draggable-handle
+      v-show="isRowExpansionHandleVisible"
+      class="row-expansion-handle"
+      :transform="`translate(${rowExpansionHandle.left}, 0)`"
+      :width="columnWidth * 0.5"
+      :height="rowHeight"
+      @handle-press="onRowExpansionHandlePressed"
+      @handle-drag="onRowExpansionHandleDragged"
+      @handle-release="onRowExpansionHandleReleased"
+      @handle-cancel="onRowExpansionHandleReleased($event, true)"
     >
-      <rect
-        class="shape"
-        x="0"
-        y="0"
-        :width="columnWidth"
-        :height="rowHeight * 0.5"
-        rx="4"
-        ry="4"
+      <arrow-icon
+        class="icon"
+        :width="columnWidth * 0.5"
+        :height="rowHeight"
       />
+    </draggable-handle>
+    <draggable-handle
+      v-show="isRowMoveHandleVisible"
+      class="row-move-handle"
+      :transform="`translate(${0.5 * (rowWidth - columnWidth)}, ${-0.5 * rowHeight})`"
+      :width="columnWidth"
+      :height="rowHeight * 0.5"
+      @handle-presse="onRowMoveHandlePressed"
+      @handle-drag="onRowMoveHandleDragged"
+      @handle-release="onRowMoveHandleReleased"
+      @handle-cancel="onRowMoveHandleReleased($event, true)"
+    >
       <hand-icon
         class="icon"
         :width="columnWidth"
         :height="rowHeight * 0.5"
       />
-      <rect
-        ref="row-move-handle"
-        class="pointer-target"
-        x="0"
-        y="0"
-        :width="columnWidth"
-        :height="rowHeight * 0.5"
-        @pointerdown="onRowMoveHandlePressed"
-        @touchstart="onRowMoveHandleTouched"
-        @pointermove="onRowMoveHandleDragged"
-        @pointerup="onRowMoveHandleReleased"
-        @pointercancel="onRowMoveHandleRelease($event, true)"
-      />
-    </g>
+    </draggable-handle>
   </g>
 </template>
 
@@ -141,6 +110,8 @@
 import { mapState } from 'vuex'
 
 import symbolUser from '@components/mixins/symbol-user'
+
+import DraggableHandle from '@components/draggable-handle'
 
 import ArrowIcon from '@mdi/svg/svg/arrow-left-right-bold.svg'
 import DeleteIcon from '@mdi/svg/svg/delete.svg'
@@ -195,6 +166,7 @@ export default {
   components: {
     ArrowIcon,
     DeleteIcon,
+    DraggableHandle,
     HandIcon
   },
   mixins: [
@@ -217,16 +189,13 @@ export default {
   data () {
     return {
       rowExpansionHandle: {
-        left: 0,
         isDragged: false,
-        lastClientX: 0
+        left: 0
       },
       rowMoveHandle: {
         isDragged: false,
         x: 0,
-        y: 0,
-        lastClientX: 0,
-        lastClientY: 0
+        y: 0
       }
     }
   },
@@ -246,19 +215,15 @@ export default {
         Math.ceil(countFraction) :
         Math.floor(countFraction)
     },
-    rowExpansionHandleClass () {
-      return {
-        'is-dragged': this.rowExpansionHandle.isDragged
-      }
+    isRowExpansionHandleVisible () {
+      return !this.rowMoveHandle.isDragged
+    },
+    isRowMoveHandleVisible () {
+      return !this.rowExpansionHandle.isDragged
     },
     dropRowAreaClass () {
       return {
         'is-active': this.rowExpansionHandle.left <= 0
-      }
-    },
-    rowMoveHandleClass () {
-      return {
-        'is-active': this.rowMoveHandle.isDragged
       }
     }
   },
@@ -313,13 +278,7 @@ export default {
           'onRowExpansionHandlePressed',
           event)
       }
-      const { target, clientX } = event
       this.rowExpansionHandle.isDragged = true
-      this.rowExpansionHandle.lastClientX = clientX
-      target.setPointerCapture(event.pointerId)
-    },
-    onRowExpansionHandleTouched (event) {
-      event.preventDefault()
     },
     onRowExpansionHandleDragged (event) {
       if (process.env.NODE_ENV !== 'production') {
@@ -328,16 +287,11 @@ export default {
           'onRowExpansionHandleDragged',
           event)
       }
-      if (!this.rowExpansionHandle.isDragged) {
-        return
-      }
-      const { clientX } = event
-      const { lastClientX } = this.rowExpansionHandle
-      this.rowExpansionHandle.left += clientX - lastClientX
-      this.rowExpansionHandle.lastClientX = clientX
+      const { dX } = event
+      this.rowExpansionHandle.left += dX
     },
-    // specify `true` to `isCancelled` to cancel edit.
-    onRowExpansionHandleReleased (event, isCancelled) {
+    // specify `true` to `isCanceled` to cancel edit.
+    onRowExpansionHandleReleased (event, isCanceled) {
       if (process.env.NODE_ENV !== 'production') {
         console.log(
           '[PatternRowEditor]',
@@ -345,7 +299,7 @@ export default {
           event)
       }
       this.rowExpansionHandle.isDragged = false
-      if (!isCancelled && (this.cellCount !== this.columns.length)) {
+      if (!isCanceled && (this.cellCount !== this.columns.length)) {
         // removes the row if cellCount is 0
         if (this.cellCount > 0) {
           this.$emit('setting-column-count', { columnCount: this.cellCount })
@@ -361,43 +315,26 @@ export default {
       if (process.env.NODE_ENV !== 'production') {
         console.log('[PatternRowEditor]', 'onRowMoveHandlePressed', event)
       }
-      const {
-        target,
-        clientX,
-        clientY,
-        pointerId
-      } = event
       this.rowMoveHandle.isDragged = true
-      this.rowMoveHandle.lastClientX = clientX
-      this.rowMoveHandle.lastClientY = clientY
-      target.setPointerCapture(pointerId)
-    },
-    onRowMoveHandleTouched (event) {
-      event.preventDefault()
     },
     onRowMoveHandleDragged (event) {
       if (process.env.NODE_ENV !== 'production') {
         console.log('[PatternRowEditor]', 'onRowMoveHandleDragged', event)
       }
-      if (!this.rowMoveHandle.isDragged) {
-        return
-      }
-      const { clientX, clientY } = event
-      const { lastClientX, lastClientY } = this.rowMoveHandle
-      this.rowMoveHandle.x += clientX - lastClientX
-      this.rowMoveHandle.y += clientY - lastClientY
-      this.rowMoveHandle.lastClientX = clientX
-      this.rowMoveHandle.lastClientY = clientY
+      const { dX, dY } = event
+      this.rowMoveHandle.x += dX
+      this.rowMoveHandle.y += dY
     },
-    onRowMoveHandleReleased (event, isCancelled) {
+    // specify `true` to `isCanceled` to cancel move.
+    onRowMoveHandleReleased (event, isCanceled) {
       if (process.env.NODE_ENV !== 'production') {
-        console.log('[PatternRowEditor]', 'onRowMoveHandleReleased', event)
+        console.log(
+          '[PatternRowEditor]',
+          'onRowMoveHandleReleased',
+          event,
+          isCanceled)
       }
       this.rowMoveHandle.isDragged = false
-      if (isCancelled) {
-        this.rowMoveHandle.x = 0
-        this.rowMoveHandle.y = 0
-      }
     }
   }
 }
@@ -421,27 +358,6 @@ export default {
   &.temporary-grid {
     stroke-dasharray: 2;
   }
-}
-
-.arrow-icon {
-  fill: $theme-green;
-
-  &.is-dragged {
-    fill: $theme-green-dark;
-  }
-}
-
-.row-expansion-handle-shape {
-  fill: lightgray;
-  stroke-width: 0;
-
-  &.is-dragged {
-    fill: gray;
-  }
-}
-
-.row-expansion-handle {
-  @extend %glass-layer;
 }
 
 .cell-to-add {
@@ -471,27 +387,6 @@ export default {
     }
     .icon {
       fill: $theme-red-dark;
-    }
-  }
-}
-
-.row-move-handle {
-  .shape {
-    fill: lightgray;
-  }
-  .icon {
-    fill: $theme-green;
-  }
-  .pointer-target {
-    @extend %glass-layer;
-  }
-
-  &.is-active {
-    .shape {
-      fill: gray;
-    }
-    .icon {
-      fill: $theme-green-dark;
     }
   }
 }
