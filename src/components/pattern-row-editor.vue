@@ -1,5 +1,8 @@
 <template>
-  <g class="amidz-row edited-row">
+  <g
+    class="amidz-row edited-row"
+    :transform="`translate(${rowMoveHandle.x}, ${rowMoveHandle.y})`"
+  >
     <g
       v-show="rowExpansionHandle.isDragged"
       class="drop-row-area"
@@ -97,6 +100,40 @@
         @pointercancel="onRowExpansionHandleReleased($event, true)"
       />
     </g>
+    <g
+      v-show="!rowExpansionHandle.isDragged"
+      :transform="`translate(${0.5 * (rowWidth - columnWidth)}, ${-0.5 * rowHeight})`"
+      class="row-move-handle"
+      :class="rowMoveHandleClass"
+    >
+      <rect
+        class="shape"
+        x="0"
+        y="0"
+        :width="columnWidth"
+        :height="rowHeight * 0.5"
+        rx="4"
+        ry="4"
+      />
+      <hand-icon
+        class="icon"
+        :width="columnWidth"
+        :height="rowHeight * 0.5"
+      />
+      <rect
+        ref="row-move-handle"
+        class="pointer-target"
+        x="0"
+        y="0"
+        :width="columnWidth"
+        :height="rowHeight * 0.5"
+        @pointerdown="onRowMoveHandlePressed"
+        @touchstart="onRowMoveHandleTouched"
+        @pointermove="onRowMoveHandleDragged"
+        @pointerup="onRowMoveHandleReleased"
+        @pointercancel="onRowMoveHandleRelease($event, true)"
+      />
+    </g>
   </g>
 </template>
 
@@ -107,6 +144,7 @@ import symbolUser from '@components/mixins/symbol-user'
 
 import ArrowIcon from '@mdi/svg/svg/arrow-left-right-bold.svg'
 import DeleteIcon from '@mdi/svg/svg/delete.svg'
+import HandIcon from '@mdi/svg/svg/hand-right.svg'
 
 /* global process */
 
@@ -156,7 +194,8 @@ export default {
   name: 'PatternRowEditor',
   components: {
     ArrowIcon,
-    DeleteIcon
+    DeleteIcon,
+    HandIcon
   },
   mixins: [
     symbolUser
@@ -181,6 +220,13 @@ export default {
         left: 0,
         isDragged: false,
         lastClientX: 0
+      },
+      rowMoveHandle: {
+        isDragged: false,
+        x: 0,
+        y: 0,
+        lastClientX: 0,
+        lastClientY: 0
       }
     }
   },
@@ -208,6 +254,11 @@ export default {
     dropRowAreaClass () {
       return {
         'is-active': this.rowExpansionHandle.left <= 0
+      }
+    },
+    rowMoveHandleClass () {
+      return {
+        'is-active': this.rowMoveHandle.isDragged
       }
     }
   },
@@ -305,6 +356,48 @@ export default {
         // the row expansion handle may be dislocated.
         this.rowExpansionHandle.left = this.rowWidth
       }
+    },
+    onRowMoveHandlePressed (event) {
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('[PatternRowEditor]', 'onRowMoveHandlePressed', event)
+      }
+      const {
+        target,
+        clientX,
+        clientY,
+        pointerId
+      } = event
+      this.rowMoveHandle.isDragged = true
+      this.rowMoveHandle.lastClientX = clientX
+      this.rowMoveHandle.lastClientY = clientY
+      target.setPointerCapture(pointerId)
+    },
+    onRowMoveHandleTouched (event) {
+      event.preventDefault()
+    },
+    onRowMoveHandleDragged (event) {
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('[PatternRowEditor]', 'onRowMoveHandleDragged', event)
+      }
+      if (!this.rowMoveHandle.isDragged) {
+        return
+      }
+      const { clientX, clientY } = event
+      const { lastClientX, lastClientY } = this.rowMoveHandle
+      this.rowMoveHandle.x += clientX - lastClientX
+      this.rowMoveHandle.y += clientY - lastClientY
+      this.rowMoveHandle.lastClientX = clientX
+      this.rowMoveHandle.lastClientY = clientY
+    },
+    onRowMoveHandleReleased (event, isCancelled) {
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('[PatternRowEditor]', 'onRowMoveHandleReleased', event)
+      }
+      this.rowMoveHandle.isDragged = false
+      if (isCancelled) {
+        this.rowMoveHandle.x = 0
+        this.rowMoveHandle.y = 0
+      }
     }
   }
 }
@@ -378,6 +471,27 @@ export default {
     }
     .icon {
       fill: $theme-red-dark;
+    }
+  }
+}
+
+.row-move-handle {
+  .shape {
+    fill: lightgray;
+  }
+  .icon {
+    fill: $theme-green;
+  }
+  .pointer-target {
+    @extend %glass-layer;
+  }
+
+  &.is-active {
+    .shape {
+      fill: gray;
+    }
+    .icon {
+      fill: $theme-green-dark;
     }
   }
 }
