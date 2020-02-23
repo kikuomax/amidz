@@ -253,24 +253,6 @@ export default {
         })
       }
     },
-    // TODO: remove this method.
-    onBoundingBoxClicked (event) {
-      const { left } = this.$refs['bounding-box'].getBoundingClientRect()
-      const { clientX } = event
-      const x = clientX - left
-      const columnIndex = Math.floor(x / this.columnWidth)
-      if (process.env.NODE_ENV !== 'production') {
-        console.log(
-          '[PatternRowEditor]',
-          `placing ${this.symbolToPlace} at ${columnIndex}`)
-      }
-      if ((columnIndex >= 0) && (columnIndex < this.columns.length)) {
-        this.$emit('placing-symbol', {
-          columnIndex: columnIndex,
-          symbol: this.symbolToPlace
-        })
-      }
-    },
     onRowExpansionHandlePressed (event) {
       if (process.env.NODE_ENV !== 'production') {
         console.log(
