@@ -3,7 +3,10 @@
     class="editor-container"
     :class="editorContainerClass"
   >
-    <div ref="svg-container">
+    <div
+      ref="svg-container"
+      class="svg-container"
+    >
       <svg
         ref="editor-svg"
         class="editor-svg"
@@ -67,6 +70,7 @@ export default {
   data () {
     return {
       svg: {
+        // `width` and `height` are determined on `mounted`.
         width: 300,
         height: 200
       },
@@ -86,7 +90,7 @@ export default {
   mounted () {
     const container = this.$refs['svg-container']
     this.svg.width = container.clientWidth
-    this.svg.height = window.innerHeight - 300
+    this.svg.height = container.clientHeight
     // programatically append a style element here (if necessary),
     // because <template> does not allows a <style> tag inside.
     this.$emit('editor-ready', {
@@ -133,6 +137,7 @@ export default {
 
 .svg-container {
   width: 100%;
+  height: 100%;
 }
 
 svg {
