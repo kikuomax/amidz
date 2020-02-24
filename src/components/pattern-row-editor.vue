@@ -1,108 +1,107 @@
 <template>
-  <g
-    class="amidz-row edited-row"
-    :transform="`translate(${rowMoveHandle.x}, ${rowMoveHandle.y})`"
-  >
-    <g
-      v-show="rowExpansionHandle.isDragged"
-      class="drop-row-area"
-      :class="dropRowAreaClass"
-      :transform="`translate(-${columnWidth * 0.5}, 0)`"
-    >
+  <g class="amidz-row edited-row">
+    <g :transform="`translate(${rowMoveHandle.dX}, ${rowMoveHandle.dY})`">
+      <g
+        v-show="rowExpansionHandle.isDragged"
+        class="drop-row-area"
+        :class="dropRowAreaClass"
+        :transform="`translate(-${columnWidth * 0.5}, 0)`"
+      >
+        <rect
+          class="shape"
+          x="0"
+          y="0"
+          :width="columnWidth * 0.5"
+          :height="rowHeight"
+          rx="4"
+          ry="4"
+        />
+        <delete-icon
+          class="icon"
+          x="0"
+          y="0"
+          :width="columnWidth * 0.5"
+          :height="rowHeight"
+        />
+        <rect
+          class="pointer-target"
+          x="0"
+          y="0"
+          :width="columnWidth * 0.5"
+          :height="rowHeight"
+        />
+      </g>
       <rect
-        class="shape"
+        class="row-selection-highlight"
         x="0"
         y="0"
-        :width="columnWidth * 0.5"
+        :width="Math.max(rowExpansionHandle.left, rowWidth)"
         :height="rowHeight"
-        rx="4"
-        ry="4"
       />
-      <delete-icon
-        class="icon"
-        x="0"
+      <use
+        v-for="(column, colIndex) in columns"
+        :key="`symbol-${colIndex}`"
+        class="amidz-symbol"
+        :href="referenceSymbol(column)"
+        :x="colIndex * columnWidth"
         y="0"
-        :width="columnWidth * 0.5"
+        :width="columnWidth"
         :height="rowHeight"
       />
       <rect
-        class="pointer-target"
+        v-for="(column, colIndex) in Math.max(columns.length, cellCount)"
+        :key="`cell-${colIndex}`"
+        class="selection-grid"
+        :class="cellClass(colIndex)"
+        :x="colIndex * columnWidth"
+        y="0"
+        :width="columnWidth"
+        :height="rowHeight"
+        @click="onCellClicked(colIndex)"
+      />
+      <rect
+        v-if="rowExpansionHandle.isDragged"
+        class="selection-grid temporary-grid"
         x="0"
         y="0"
-        :width="columnWidth * 0.5"
+        :width="Math.max(0, rowExpansionHandle.left)"
         :height="rowHeight"
       />
-    </g>
-    <rect
-      class="row-selection-highlight"
-      x="0"
-      y="0"
-      :width="Math.max(rowExpansionHandle.left, rowWidth)"
-      :height="rowHeight"
-    />
-    <use
-      v-for="(column, colIndex) in columns"
-      :key="`symbol-${colIndex}`"
-      class="amidz-symbol"
-      :href="referenceSymbol(column)"
-      :x="colIndex * columnWidth"
-      y="0"
-      :width="columnWidth"
-      :height="rowHeight"
-    />
-    <rect
-      v-for="(column, colIndex) in Math.max(columns.length, cellCount)"
-      :key="`cell-${colIndex}`"
-      class="selection-grid"
-      :class="cellClass(colIndex)"
-      :x="colIndex * columnWidth"
-      y="0"
-      :width="columnWidth"
-      :height="rowHeight"
-      @click="onCellClicked(colIndex)"
-    />
-    <rect
-      v-if="rowExpansionHandle.isDragged"
-      class="selection-grid temporary-grid"
-      x="0"
-      y="0"
-      :width="Math.max(0, rowExpansionHandle.left)"
-      :height="rowHeight"
-    />
-    <draggable-handle
-      v-show="isRowExpansionHandleVisible"
-      class="row-expansion-handle"
-      :transform="`translate(${rowExpansionHandle.left}, 0)`"
-      :width="columnWidth * 0.5"
-      :height="rowHeight"
-      @handle-press="onRowExpansionHandlePressed"
-      @handle-drag="onRowExpansionHandleDragged"
-      @handle-release="onRowExpansionHandleReleased"
-      @handle-cancel="onRowExpansionHandleReleased($event, true)"
-    >
-      <arrow-icon
-        class="icon"
+      <draggable-handle
+        v-show="isRowExpansionHandleVisible"
+        class="row-expansion-handle"
+        :transform="`translate(${rowExpansionHandle.left}, 0)`"
         :width="columnWidth * 0.5"
         :height="rowHeight"
-      />
-    </draggable-handle>
-    <draggable-handle
-      v-show="isRowMoveHandleVisible"
-      class="row-move-handle"
-      :transform="`translate(${0.5 * (rowWidth - columnWidth)}, ${-0.5 * rowHeight})`"
-      :width="columnWidth"
-      :height="rowHeight * 0.5"
-      @handle-presse="onRowMoveHandlePressed"
-      @handle-drag="onRowMoveHandleDragged"
-      @handle-release="onRowMoveHandleReleased"
-      @handle-cancel="onRowMoveHandleReleased($event, true)"
-    >
-      <hand-icon
-        class="icon"
+        @handle-press="onRowExpansionHandlePressed"
+        @handle-drag="onRowExpansionHandleDragged"
+        @handle-release="onRowExpansionHandleReleased"
+        @handle-cancel="onRowExpansionHandleReleased($event, true)"
+      >
+        <arrow-icon
+          class="icon"
+          :width="columnWidth * 0.5"
+          :height="rowHeight"
+        />
+      </draggable-handle>
+      <draggable-handle
+        v-show="isRowMoveHandleVisible"
+        class="row-move-handle"
+        :transform="`translate(${0.5 * (rowWidth - columnWidth)}, ${-0.5 * rowHeight})`"
         :width="columnWidth"
         :height="rowHeight * 0.5"
-      />
-    </draggable-handle>
+        @handle-presse="onRowMoveHandlePressed"
+        @handle-drag="onRowMoveHandleDragged"
+        @handle-release="onRowMoveHandleReleased"
+        @handle-cancel="onRowMoveHandleReleased($event, true)"
+      >
+        <hand-icon
+          class="icon"
+          :width="columnWidth"
+          :height="rowHeight * 0.5"
+        />
+      </draggable-handle>
+    </g>
   </g>
 </template>
 
@@ -122,9 +121,17 @@ import HandIcon from '@mdi/svg/svg/hand-right.svg'
 /**
  * Vue component representing an editor of a pattern row.
  *
- * This component replaces {@linkcode module:components.PatternRow}.
+ * This component is a part of
+ * [PatternEditor]{@linkcode module:components.PatternEditor}.
  *
- * `placing-symbol` event provides an object that has the following fields,
+ * #### Events
+ *
+ * This component emits the following events.
+ *
+ * ##### `placing-symbol`
+ *
+ * This event is triggered when a user is about to place a symbol.
+ * The event payload is an object that has the following fields,
  * - `columnIndex`: {`number`}
  *   Index of the column where the symbol is to be placed.
  * - `symbol`: {`object`}
@@ -133,9 +140,29 @@ import HandIcon from '@mdi/svg/svg/hand-right.svg'
  *     - `symbolId`: {`string`}
  *       ID of the symbol to place.
  *
- * `setting-column-count` event provides an object that has the following field,
+ * ##### `setting-column-count`
+ *
+ * This event is triggered when a user is about to set the number of columns.
+ * The event payload is an object that has the following field,
  * - `columnCount`: {`number`}
  *   Number of columns to set.
+ *
+ * ##### `deleting-row`
+ *
+ * This event is triggered when a user is about to delete the row.
+ * This event has no payload.
+ *
+ * ##### `moving-row`
+ *
+ * This event is triggered when a user is about to move the row.
+ * The event payload is an object that has the following fields,
+ * - `dX`: {`number`}
+ *   Distance to move the row along x-axis.
+ * - `dY`: {`number`}
+ *   Distance to move the row along y-axis.
+ *
+ * **NOTE**: this event is not triggered when a user is still grabbing the row
+ * and seeking where to place the row.
  *
  * @namespace PatternRowEditor
  *
@@ -153,11 +180,19 @@ import HandIcon from '@mdi/svg/svg/hand-right.svg'
  *
  * @vue-event {Object} placing-symbol
  *
- *   When a user is going to place a symbol of a column.
+ *   Triggered when a user is about to place a symbol of a column.
  *
  * @vue-event {Object} setting-column-count
  *
- *   When a user is going to set the number of columns of the row.
+ *   Triggered when a user is about to set the number of columns of the row.
+ *
+ * @vue-event {Object} deleting-row
+ *
+ *   Triggered when a user is about to delete the row.
+ *
+ * @vue-event {Object} moving-row
+ *
+ *   Triggered when a user is about to move the row.
  *
  * @memberof module:components
  */
@@ -194,8 +229,8 @@ export default {
       },
       rowMoveHandle: {
         isDragged: false,
-        x: 0,
-        y: 0
+        dX: 0,
+        dY: 0
       }
     }
   },
@@ -304,8 +339,8 @@ export default {
         console.log('[PatternRowEditor]', 'onRowMoveHandleDragged', event)
       }
       const { dX, dY } = event
-      this.rowMoveHandle.x += dX
-      this.rowMoveHandle.y += dY
+      this.rowMoveHandle.dX += dX
+      this.rowMoveHandle.dY += dY
     },
     // specify `true` to `isCanceled` to cancel move.
     onRowMoveHandleReleased (event, isCanceled) {
@@ -317,6 +352,12 @@ export default {
           isCanceled)
       }
       this.rowMoveHandle.isDragged = false
+      if (!isCanceled) {
+        const { dX, dY } = this.rowMoveHandle
+        this.$emit('moving-row', { dX, dY })
+      }
+      this.rowMoveHandle.dX = 0
+      this.rowMoveHandle.dY = 0
     }
   }
 }
