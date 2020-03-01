@@ -9,7 +9,7 @@
   "scripts": {
     "build": "webpack",
     "build:doc": "jsdoc -r -c jsdoc-conf.js -d api-doc",
-    "test": "mochapack --webpack-config webpack.config-test.js --require test/setup.js test/**/*.spec.js",
+    "test": "mochapack --webpack-config webpack.config-test.js --require test/setup.js 'test/**/*.spec.js'",
     "cypress:open": "cypress open",
     "cypress:run": "percy exec -- cypress run",
     "dev": "webpack-dev-server",

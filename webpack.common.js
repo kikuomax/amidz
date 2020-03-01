@@ -30,6 +30,7 @@ module.exports = {
   resolve: {
     alias: {
       '@components': path.resolve(__dirname, 'src/components'),
+      '@db': path.resolve(__dirname, 'src/db'),
       '@i18n': path.resolve(__dirname, 'src/i18n'),
       '@route': path.resolve(__dirname, 'src/route'),
       '@scss': path.resolve(__dirname, 'src/scss'),
