@@ -310,6 +310,9 @@ function loadCurrentPattern (promisedDb, { commit }) {
             console.log('[pattern].loadCurrentPattern', 'onsuccess', event)
           }
           const { result: patternData } = event.target
+          if (process.env.NODE_ENV !== 'production') {
+            console.log('[pattern].loadCurrentPattern', 'patternData', patternData)
+          }
           resolve(patternData)
         }
       })
