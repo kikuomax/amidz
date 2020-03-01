@@ -7,9 +7,14 @@ import 'buefy/dist/buefy.css'
 Vue.use(Buefy)
 Vue.use(VueI18n)
 
+import {
+  populateStores,
+  upgradeStores
+} from '@db'
+
 // experimental IndexedDB
 const AMIDZ_DATABASE_NAME = 'AmidzDatabase'
-const AMIDZ_DATABASE_VERSION = 1
+const AMIDZ_DATABASE_VERSION = 2
 
 /* global process */
 
@@ -40,52 +45,24 @@ const promisedDb = new Promise((resolve, reject) => {
   }
   openRequest.onerror = function (event) {
     console.log('indexedDB.open', 'onerror', event)
-    resolve(new Error(`failed to open IndexedDB ${AMIDZ_DATABASE_NAME}`))
+    reject(new Error(`failed to open IndexedDB ${AMIDZ_DATABASE_NAME}`))
   }
   openRequest.onblocked = function (event) {
     console.log('indexedDB.open', 'onblocked', event)
-    resolve(new Error(`IndexedDB ${AMIDZ_DATABASE_NAME} is blocked`))
+    reject(new Error(`IndexedDB ${AMIDZ_DATABASE_NAME} is blocked`))
   }
   openRequest.onupgradeneeded = function (event) {
     console.log('indexedDB.open', 'onupgradeneeded', event)
     const { result: db } = event.target
-    const patternStore = db.createObjectStore(
-      'pattern',
-      {
-        keyPath: 'name'
-      })
-    console.log('indexedDB.open', 'onupgradeneeded', patternStore)
-    // populates a pattern
-    const addRequest = patternStore.add({
-      name: '$current',
-      rows: [
-        {
-          columns: [
-            {
-              symbolId: 'test-symbol'
-            },
-            {
-              symbolId: 'test-symbol'
-            },
-            {
-              symbolId: 'test-symbol2'
-            }
-          ]
-        },
-        {
-          columns: [
-            {
-              symbolId: 'test-symbol2'
-            }
-          ]
-        }
-      ]
-    })
-    addRequest.onsuccess = function (event) {
-      console.log('patternStore.add', 'onsuccess', event)
-    }
-    addRequest.onerror = function (event) {
-      console.log('patternStore.add', 'onerror', event)
+    const { oldVersion, newVersion } = event
+    if (oldVersion === 0) {
+      // `oldVersion` should be 0 if there is no database.
+      // https://developer.mozilla.org/en-US/docs/Web/API/IDBVersionChangeEvent/oldVersion
+      populateStores(db, newVersion)
+    } else {
+      // db.transaction is not allowed during versionchange event.
+      const { transaction } = openRequest
+      upgradeStores(transaction, { oldVersion, newVersion })
     }
   }
 })
