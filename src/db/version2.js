@@ -9,7 +9,7 @@
 /* global process */
 
 /**
- * Populates stores.
+ * Populates stores of the database version 2.
  *
  * Populates a `pattern` store with a single object that has the following
  * fields,
@@ -22,29 +22,19 @@
  *
  *   Database where stores are to be populated.
  *
- * @return {Promise}
+ * @throws {TypeError}
  *
- *   `Promise` that is resolved into nothing when the population ends.
- *   May be rejected with
- *   - `TypeError`:
- *     if `db` is not compatible with `IDBDatabase`.
+ *   If `db` is not compatible with `IDBDatabase`.
  *
  * @memberof module:db.version2
  */
 function populateStores (db) {
-  return new Promise((resolve, reject) => {
-    try {
-      const pattern = db.createObjectStore('pattern', {
-        keyPath: 'name'
-      })
-      pattern.add({
-        name: '$current',
-        rows: []
-      })
-      resolve()
-    } catch (err) {
-      reject(err)
-    }
+  const pattern = db.createObjectStore('pattern', {
+    keyPath: 'name'
+  })
+  pattern.add({
+    name: '$current',
+    rows: []
   })
 }
 
@@ -58,30 +48,29 @@ function populateStores (db) {
  *
  * @function upgradeStoresFrom
  *
- * @param {IDBDatabase} db
+ * @param {IDBTransaction} transaction
  *
- *   Database to be upgraded.
+ *   `IDBTransaction` where stores are to be upgraded.
  *
  * @param {number} oldVersion
  *
  *   Version of the database to be upgraded.
  *
- * @return {Promise}
+ * @throws {TypeError}
  *
- *   `Promise` that is resolved into nothing when the upgrade ends.
- *   May be rejected with
- *   - `TypeError`:
- *     if `db` is not compatible with `IDBDatabase`.
- *   - `RangeError`:
- *     if `oldVersion` is not `1`.
+ *   If `transaction` is not compatible with `IDBTransaction`.
+ *
+ * @throws {RangeError}
+ *
+ *   If `oldVersion` is not `1`.
  *
  * @memberof module:db.version2
  */
-function upgradeStoresFrom (db, oldVersion) {
+function upgradeStoresFrom (transaction, oldVersion) {
   if (oldVersion === 1) {
-    return upgradeStoresFromVersion1(db)
+    return upgradeStoresFromVersion1(transaction)
   } else {
-    return Promise.fail(new RangeError(`database may be upgraded only from version 1 but ${oldVersion} was specified`))
+    throw new RangeError(`database can be upgraded only from version 1 but ${oldVersion} was specified`)
   }
 }
 
@@ -93,39 +82,28 @@ function upgradeStoresFrom (db, oldVersion) {
  *
  * @function upgradeStoresFromVersion1
  *
- * @param {IDBDatabase} db
+ * @param {IDBTransaction} transaction
  *
- *   Database to be upgraded.
+ *   `IDBTransaction` where store are to be upgraded.
  *
- * @return {Promise}
+ * @throws {TypeError}
  *
- *   `Promise` that is resolved into nothing when the upgrade ends.
- *   May be rejected with
- *   - `TypeError` if `db` is not compatible with `IDBDatabase`.
- *   - `Error` if a transaction could not be completed.
+ *   If `transaction` is not compatible with `IDBTransaction`.
  *
  * @memberof module:db.version2
  */
-function upgradeStoresFromVersion1 (db) {
-  return new Promise((resolve, reject) => {
-    const transaction = db.transaction('pattern', 'readwrite')
-    transaction.oncomplete = () => {
-      resolve()
+function upgradeStoresFromVersion1 (transaction) {
+  const pattern = transaction.objectStore('pattern')
+  const request = pattern.openCursor()
+  request.onsuccess = event => {
+    const cursor = event.target.result
+    if (cursor) {
+      const { value } = cursor
+      const upgraded = upgradePatternFromVersion1(value)
+      pattern.put(upgraded)
+      cursor.continue()
     }
-    transaction.onerror = () => {
-      reject(new Error('failed to obtain the pattern store from the database'))
-    }
-    const pattern = transaction.objectStore('pattern')
-    const request = pattern.openCursor()
-    request.onsuccess = event => {
-      const cursor = event.target.result
-      if (cursor) {
-        const { value } = cursor
-        transaction.put(upgradePatternFromVersion1(value))
-        cursor.continue()
-      }
-    }
-  })
+  }
 }
 
 /**
@@ -169,7 +147,7 @@ function upgradeStoresFromVersion1 (db) {
  *
  * @memberof module:db.version2
  */
-function upgradePatternFromVersion1 (pattern) {
+export function upgradePatternFromVersion1 (pattern) {
   if (typeof(pattern) !== 'object') {
     throw new TypeError(
       `pattern must be an object but ${typeof(pattern)} was given`)
@@ -204,11 +182,8 @@ function upgradePatternFromVersion1 (pattern) {
   }
 }
 
-export {
+export default {
   populateStores,
   upgradeStoresFrom,
   upgradePatternFromVersion1
 }
-
-// to suppress Webpack warning.
-export default {}

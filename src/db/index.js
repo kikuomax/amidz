@@ -6,6 +6,7 @@
  * @module db
  */
 
+import version1 from './version1'
 import version2 from './version2'
 
 /* global process */
@@ -23,28 +24,28 @@ import version2 from './version2'
  *
  *   Version of the database to be populated.
  *
- * @return {Promise}
+ * @throws {TypeError}
  *
- *   `Promise` that resolves when the population ends.
- *   May be rejected with
- *   - `TypeError`:
- *     If `db` is not compatible with `IDBDatabase`.
- *   - `RangeError`:
- *     If `version` is not supported.
+ *   If `db` is not compatible with `IDBDatabase`.
+ *
+ * @throws {RangeError}
+ *
+ *   If `version` is not supported.
  */
 export function populateStores (db, version) {
   if (process.env.NODE_ENV !== 'production') {
     console.log('populateStores', version)
   }
-  let populate
   switch (version) {
+    case 1:
+      version1.populateStores(db)
+      break
     case 2:
-      populate = version2.populateStores(db)
+      version2.populateStores(db)
       break
     default:
-      populate = Promise.fail(new RangeError(`unsupported version: ${version}`))
+      throw new RangeError(`unsupported version: ${version}`)
   }
-  return populate
 }
 
 /**
@@ -54,9 +55,9 @@ export function populateStores (db, version) {
  *
  * @function upgradeStores
  *
- * @param {IDBDatabase} db
+ * @param {IDBTransaction} transaction
  *
- *   [IDBDatabase]{@linkcode https://developer.mozilla.org/en-US/docs/Web/API/IDBDatabase} where stores are to be populated.
+ *   [IDBTransaction]{@linkcode https://developer.mozilla.org/en-US/docs/Web/API/IDBTransaction} where stores are to be populated.
  *
  * @param {object} _
  *
@@ -66,28 +67,26 @@ export function populateStores (db, version) {
  *   - `newVersion`: {`number`}
  *     New version of the database to upgrade to.
  *
- * @return {Promise}
+ * @throws {TypeError}
  *
- *   `Promise` that resolves when the upgrade ends.
- *   May be rejected with
- *   - `TypeError`:
- *     If `db` is not compatible with `IDBDatabase`.
- *   - `RangeError`:
- *     One or more of the following conditions are met,
- *       - `oldVersion` is not supported.
- *       - `newVersion` is not supported.
- *       - Upgrade from `oldVersion` to `newVersion` is not supported.
+ *   If `transaction` is not compatible with `IDBTransaction`.
+ *
+ * @throws {RangeError}
+ *
+ * If one or more of the following conditions are met,
+ * - `oldVersion` is not supported.
+ * - `newVersion` is not supported.
+ * - Upgrade from `oldVersion` to `newVersion` is not supported.
  */
-export function upgradeStores (db, { oldVersion, newVersion }) {
+export function upgradeStores (transaction, { oldVersion, newVersion }) {
   if (process.env.NODE_ENV !== 'production') {
-    console.log('exportStores', oldVersion, newVersion)
+    console.log('upgradeStores', oldVersion, newVersion)
   }
-  let upgrade
-  if (newVersion === 2) {
-    upgrade = version2.upgradeStoresFrom(db, oldVersion)
-  } else {
-    upgrade = Promise.reject(
-      new RangeError(`unsupported database version: ${newVersion}`))
+  switch (newVersion) {
+    case 2:
+      version2.upgradeStoresFrom(transaction, oldVersion)
+      break
+    default:
+      throw new RangeError(`unsupported database version: ${newVersion}`)
   }
-  return upgrade
 }
