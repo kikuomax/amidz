@@ -165,8 +165,10 @@ export function upgradePatternFromVersion1 (pattern) {
           throw new Error('row must have columns')
         }
         return {
-          left: 0,
-          top: 50 * (rows.length - i - 1),
+          position: {
+            left: 0,
+            top: 50 * (rows.length - i - 1),
+          },
           ...row
         }
       })

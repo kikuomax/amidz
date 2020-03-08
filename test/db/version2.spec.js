@@ -38,8 +38,10 @@ describe('db.version2', function () {
         name: '$current',
         rows: [
           {
-            left: 0,
-            top: 50,
+            position: {
+              left: 0,
+              top: 50
+            },
             columns: [
               {
                 symbolId: 'test-symbol'
@@ -50,8 +52,10 @@ describe('db.version2', function () {
             ]
           },
           {
-            left: 0,
-            top: 0,
+            position: {
+              left: 0,
+              top: 0
+            },
             columns: [
               {
                 symbolId: 'blank-symbol'
@@ -86,8 +90,10 @@ describe('db.version2', function () {
         name: 'パターン',
         rows: [
           {
-            left: 0,
-            top: 0,
+            position: {
+              left: 0,
+              top: 0
+            },
             columns: []
           }
         ]
