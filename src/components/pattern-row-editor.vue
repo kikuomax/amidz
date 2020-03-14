@@ -38,16 +38,6 @@
         :width="Math.max(rowExpansionHandle.left, rowWidth)"
         :height="rowHeight"
       />
-      <use
-        v-for="(column, colIndex) in columns"
-        :key="`symbol-${colIndex}`"
-        class="amidz-symbol"
-        :href="referenceSymbol(column)"
-        :x="colIndex * columnWidth"
-        y="0"
-        :width="columnWidth"
-        :height="rowHeight"
-      />
       <rect
         v-for="(column, colIndex) in Math.max(columns.length, cellCount)"
         :key="`cell-${colIndex}`"
@@ -65,6 +55,16 @@
         x="0"
         y="0"
         :width="Math.max(0, rowExpansionHandle.left)"
+        :height="rowHeight"
+      />
+      <use
+        v-for="(column, colIndex) in columns"
+        :key="`symbol-${colIndex}`"
+        class="amidz-symbol"
+        :href="referenceSymbol(column)"
+        :x="colIndex * columnWidth"
+        y="0"
+        :width="columnWidth"
         :height="rowHeight"
       />
       <draggable-handle
@@ -368,13 +368,17 @@ export default {
 @import "@scss/amidz-mixins";
 
 .row-selection-highlight {
+  stroke: white;
+  stroke-opacity: 1.0;
+  stroke-width: 1.0;
   fill: white;
-  fill-opacity: 1.0;
+  fill-opacity: 0.0;
   filter: url(#highlight-blur-selected-row);
 }
 
 .selection-grid {
-  fill-opacity: 0.0;
+  fill: white;
+  fill-opacity: 0.7;
   stroke: $theme-red;
   stroke-width: 1.0;
 
