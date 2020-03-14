@@ -16,8 +16,15 @@
  *   Data of the pattern currently being edited.
  *   Has the following fields,
  *     - `rows`: {`array<object>`}
- *       Rows, bottom to top, of the pattern currently being edited.
+ *       Rows of the pattern currently being edited.
  *       Each element is an object with the following fields,
+ *         - `position`: {`object`}
+ *           Position of the row.
+ *           Has the following fields,
+ *             - `left`: {`number`}
+ *               Left position of the row.
+ *             - `top`: {`number`}
+ *               Top position of the row.
  *         - `columns`: {`array<object>`}
  *           Columns, left to right, of the row.
  *           Each element is an object with the following fields,
@@ -34,6 +41,10 @@ const state = {
   patternData: {
     rows: [
       {
+        position: {
+          left: 0,
+          top: 0
+        },
         columns: [
           {
             symbolId: 'blank-symbol'
@@ -51,6 +62,7 @@ const getters = {}
  *
  * The follwoing functions are defined,
  * - [setSymbolAt]{@linkcode module:store.pattern.setSymbolAt}
+ * - [setRowPosition]{@linkcode module:store.pattern.setRowPosition}
  * - [setColumnCount]{@linkcode module:store.pattern.setColumnCount}
  * - [appendNewRow]{@linkcode module:store.pattern.appendNewRow}
  * - [deleteRow]{@linkcode module:store.pattern.deleteRow}
@@ -95,6 +107,35 @@ const mutations = {
     columns[columnIndex].symbolId = symbol.symbolId
   },
   /**
+   * (Mutation) Sets the position of a given row.
+   *
+   * @function setRowPosition
+   *
+   * @param {object} state
+   *
+   *   `State` of the `pattern` store.
+   *
+   * @param {object}_
+   *
+   *   Has the following fields,
+   *   - `rowIndex`: {`number`}
+   *     Index of the row to move.
+   *   - `left`: {`number`}
+   *     New left position of the row.
+   *   - `top`: {`number`}
+   *     New top position of the row.
+   *
+   * @memberof module:store.pattern
+   */
+  setRowPosition (state, { rowIndex, left, top }) {
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('[pattern].setRowPosition', rowIndex, left, top)
+    }
+    const { position } = state.patternData.rows[rowIndex]
+    position.left = left
+    position.top = top
+  },
+  /**
    * (Mutation) Sets the number of columns of a given row.
    *
    * @function setColumnCount
@@ -133,7 +174,8 @@ const mutations = {
   /**
    * (Mutation) Appends a new row.
    *
-   * Appends a new row with a single blank column.
+   * Appends a new row with a single blank column, that is positioned at
+   * `left=0` and `top=0`.
    *
    * @function appendNewRow
    *
@@ -150,6 +192,10 @@ const mutations = {
     const { patternData } = state
     const { rows } = patternData
     const newRow = {
+      position: {
+        left: 0,
+        top: 0
+      },
       columns: [
         {
           symbolId: 'blank-symbol'

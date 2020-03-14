@@ -88,10 +88,7 @@ export default {
       // index of the row that is being edited.
       // -1 if there is no such row.
       editedRowIndex: 0,
-      marginLeft: 30,
-      // positions of rows.
-      // TODO: workaround before migration of the database.
-      rowPositions: []
+      marginLeft: 30
     }
   },
   computed: {
@@ -115,41 +112,19 @@ export default {
         .filter(i => i !== this.editedRowIndex)
     }
   },
-  watch: {
-    // TODO: workaround before database migration.
-    rows (newRows, oldRows) {
-      if (newRows !== oldRows) {
-        this.resetRowPositions()
-      }
-    }
-  },
-  created () {
-    // TODO: workaround before database migration.
-    this.resetRowPositions()
-  },
   methods: {
     ...mapMutations('pattern', [
       'appendNewRow',
       'deleteRow',
       'setColumnCount',
+      'setRowPosition',
       'setSymbolAt'
     ]),
     ...mapActions('pattern', [
       'saveCurrentPattern'
     ]),
-    // assigns default positions to rows.
-    // TODO: workaround before database migration.
-    resetRowPositions () {
-      this.rowPositions = [...this.rows.keys()].map(i => {
-        return {
-          left: 0,
-          top: this.patternHeight - ((i + 1) * this.rowHeight)
-        }
-      })
-    },
     rowTransform (rowIndex) {
-      // TODO: position has to be included in row data.
-      const { left, top } = this.rowPositions[rowIndex]
+      const { left, top } = this.rows[rowIndex].position
       return `translate(${left}, ${top})`
     },
     onPlacingSymbol (rowIndex, { columnIndex, symbol }) {
@@ -191,9 +166,6 @@ export default {
       }
       this.deleteRow({ rowIndex })
       this.editedRowIndex = -1
-      // updates also the row index.
-      // TODO: workaround before database migration.
-      this.rowPositions.splice(rowIndex, 1)
       // TODO: there should be better place to trigger saving data
       this.saveCurrentPattern()
     },
@@ -201,10 +173,12 @@ export default {
       if (process.env.NODE_ENV !== 'production') {
         console.log('[PatternEditor]', `moving row ${rowIndex}`, dX, dY)
       }
-      // TODO: workaround before database migration
-      const position = this.rowPositions[rowIndex]
-      position.left += dX
-      position.top += dY
+      let { left, top } = this.rows[rowIndex].position
+      left += dX
+      top += dY
+      this.setRowPosition({ rowIndex, left, top })
+      // TODO: there should be better place to trigger saving data
+      this.saveCurrentPattern()
     },
     onAddRowButtonClicked () {
       if (process.env.NODE_ENV !== 'production') {
@@ -212,15 +186,6 @@ export default {
       }
       this.appendNewRow()
       this.editedRowIndex = this.rows.length - 1
-      // updates also the row index.
-      // TODO: workaround before database migration.
-      this.rowPositions.forEach(r => {
-        r.top += this.rowHeight
-      })
-      this.rowPositions.push({
-        left: 0,
-        top: this.patternHeight - ((this.rows.length) * this.rowHeight)
-      })
       // TODO: there should be better place to trigger saving data
       this.saveCurrentPattern()
     }
