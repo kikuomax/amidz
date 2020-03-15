@@ -27,4 +27,5 @@
 // percy support.
 import '@percy/cypress'
 
+import './amidz-database'
 import './pointer-events'

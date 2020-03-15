@@ -7,65 +7,52 @@ describe('With a pattern row editor', function () {
     // populates a test database.
     // database population must be done before the site is visited.
     cy.window()
-      .then(window => {
-        expect(window).to.exist
+      .openAmidzDatabase()
+      .then(db => {
         return new Cypress.Promise((resolve, reject) => {
-          const request = window.indexedDB.open('AmidzDatabase')
-          request.onsuccess = event => {
+          const transaction = db.transaction('pattern', 'readwrite')
+          transaction.oncomplete = () => {
             // just to monitor the progress
-            expect(true, 'database opened').to.be.true
-            const db = event.target.result
-            db.onversionchange = () => {
-              db.close()
-            }
-            const transaction = db.transaction('pattern', 'readwrite')
-            transaction.oncomplete = () => {
-              // just to monitor the progress
-              expect(true, 'database prepared').to.be.true
-              resolve()
-            }
-            const patternStore = transaction.objectStore('pattern')
-            patternStore.put({
-              name: '$current',
-              rows: [
-                {
-                  position: {
-                    left: 0,
-                    top: 50
-                  },
-                  columns: [
-                    {
-                      symbolId: 'test-symbol'
-                    },
-                    {
-                      symbolId: 'test-symbol'
-                    },
-                    {
-                      symbolId: 'test-symbol2'
-                    }
-                  ]
+            expect(true, 'database prepared').to.be.true
+            resolve()
+          }
+          transaction.onerror = () => {
+            reject(new Error('failed to prepare database'))
+          }
+          const patternStore = transaction.objectStore('pattern')
+          patternStore.put({
+            name: '$current',
+            rows: [
+              {
+                position: {
+                  left: 0,
+                  top: 50
                 },
-                {
-                  position: {
-                    left: 0,
-                    top: 0
+                columns: [
+                  {
+                    symbolId: 'test-symbol'
                   },
-                  columns: [
-                    {
-                      symbolid: 'test-symbol'
-                    }
-                  ]
-                }
-              ]
-            })
-          }
-          request.onupgradeneeded = event => {
-            const db = event.target.result
-            version2.populateStores(db)
-          }
-          request.onerror = () => {
-            reject(new Error('failed to open AmidzDatabase'))
-          }
+                  {
+                    symbolId: 'test-symbol'
+                  },
+                  {
+                    symbolId: 'test-symbol2'
+                  }
+                ]
+              },
+              {
+                position: {
+                  left: 0,
+                  top: 0
+                },
+                columns: [
+                  {
+                    symbolId: 'test-symbol'
+                  }
+                ]
+              }
+            ]
+          })
         })
       })
     cy.visit('/')
@@ -82,19 +69,7 @@ describe('With a pattern row editor', function () {
   afterEach(function () {
     // flushes the AmidzDatabase
     cy.window()
-      .then(window => {
-        expect(window.indexedDB).to.exist
-        return new Cypress.Promise((resolve, reject) => {
-          const request = window.indexedDB.deleteDatabase('AmidzDatabase')
-          request.onsuccess = function () {
-            expect(true, 'database deleted').to.be.true
-            resolve()
-          }
-          request.onerror = function () {
-            reject(new Error('failed to flush AmidzDatabase'))
-          }
-        })
-      })
+      .deleteAmidzDatabase()
   })
 
   it('A designer appends a column to a row by dragging the row expansion handle rightward', function () {
