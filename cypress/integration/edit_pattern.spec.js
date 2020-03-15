@@ -1,8 +1,77 @@
+import version2 from '../../src/db/version2'
+
 describe('With a pattern editor', function () {
   const cellWidth = 50
   const cellHeight = 50
 
   beforeEach(function () {
+    // populates a test database.
+    // database population must be done before the page is opened.
+    cy.window()
+      .then(window => {
+        expect(window).to.exist
+        return new Cypress.Promise((resolve, reject) => {
+          const request = window.indexedDB.open('AmidzDatabase', 2)
+          request.onsuccess = event => {
+            // just to monitor the progress
+            expect(true, 'database opened').to.be.true
+            const db = event.target.result
+            db.onversionchange = () => {
+              // do not forget to close the IndexedDB
+              // to prevent blocking when it is deleted.
+              db.close()
+            }
+            // puts a test pattern
+            const transaction = db.transaction('pattern', 'readwrite')
+            transaction.oncomplete = () => {
+              // just to monitor the progress
+              expect(true, 'database prepared').to.be.true
+              resolve()
+            }
+            const patternStore = transaction.objectStore('pattern')
+            patternStore.put({
+              name: '$current',
+              rows: [
+                {
+                  position: {
+                    left: 0,
+                    top: 50
+                  },
+                  columns: [
+                    {
+                      symbolId: 'test-symbol'
+                    },
+                    {
+                      symbolId: 'test-symbol'
+                    },
+                    {
+                      symbolId: 'test-symbol2'
+                    }
+                  ]
+                },
+                {
+                  position: {
+                    left: 0,
+                    top: 0
+                  },
+                  columns: [
+                    {
+                      symbolId: 'test-symbol'
+                    }
+                  ]
+                }
+              ]
+            })
+          }
+          request.onupgradeneeded = event => {
+            const db = event.target.result
+            version2.populateStores(db)
+          }
+          request.onerror = () => {
+            reject(new Error('failed to open AmidzDatabase'))
+          }
+        })
+      })
     cy.visit('/')
     // waits until the editor container gets ready.
     cy.get('.editor-container')
@@ -22,6 +91,8 @@ describe('With a pattern editor', function () {
         return new Cypress.Promise((resolve, reject) => {
           const request = window.indexedDB.deleteDatabase('AmidzDatabase')
           request.onsuccess = () => {
+            // just to monitor the progress
+            expect(true, 'database deleted').to.be.true
             resolve()
           }
           request.onerror = () => {
