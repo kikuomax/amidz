@@ -16,6 +16,7 @@
         :column-width="columnWidth"
         :row-height="rowHeight"
         :is-edited="false"
+        :data-row-index="rowIndex"
         @selecting-row="onSelectingRow(rowIndex)"
       />
       <pattern-row-editor
@@ -25,6 +26,7 @@
         :column-width="columnWidth"
         :row-height="rowHeight"
         :is-edited="true"
+        :data-row-index="editedRowIndex"
         @placing-symbol="onPlacingSymbol(editedRowIndex, $event)"
         @setting-column-count="onSettingColumnCount(editedRowIndex, $event)"
         @deleting-row="onDeletingRow(editedRowIndex)"

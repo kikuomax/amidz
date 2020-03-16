@@ -87,7 +87,6 @@ describe('With a pattern row editor', function () {
       .pointer('up')
     cy.get('@handle')
       .should('not.have.class', 'is-dragged')
-    // TODO: too specific to the implementation details.
     cy.get('g.edited-row .amidz-symbol')
       .should('have.length', 4)
     cy.percySnapshot(`${testTitle()} [at pointerup]`)
@@ -107,7 +106,6 @@ describe('With a pattern row editor', function () {
       .pointer('up')
     cy.get('@handle')
       .should('not.have.class', 'is-dragged')
-    // TODO: too specific to the implementation details.
     cy.get('g.edited-row .amidz-symbol')
       .should('have.length', 2)
     cy.percySnapshot(`${testTitle()} [at pointerup]`)
@@ -121,7 +119,6 @@ describe('With a pattern row editor', function () {
     cy.percySnapshot(`${testTitle()} [at pointermove]`)
     cy.get('@pointer-target')
       .pointer('up')
-    // TODO: too specific to the implementation details.
     cy.get('g.edited-row .amidz-symbol')
       .should('have.length', 3)
     cy.percySnapshot(`${testTitle()} [at pointerup]`)
@@ -135,7 +132,6 @@ describe('With a pattern row editor', function () {
     cy.percySnapshot(`${testTitle()} [at pointermove]`)
     cy.get('@pointer-target')
       .pointer('up')
-    // TODO: too specific to the implementation details.
     cy.get('g.edited-row .amidz-symbol')
       .should('have.length', 3)
     cy.percySnapshot(`${testTitle()} [at pointerup]`)
@@ -148,7 +144,6 @@ describe('With a pattern row editor', function () {
       .pointer('cancel')
     cy.get('.row-expansion-handle')
       .should('not.have.class', 'is-dragged')
-    // TODO: too specific to the implementation details.
     cy.get('g.edited-row .amidz-symbol')
       .should('have.length', 3)
     cy.percySnapshot(`${testTitle()} [at pointercancel]`)
@@ -163,7 +158,6 @@ describe('With a pattern row editor', function () {
     cy.get('.drop-row-area')
       .should('not.have.class', 'is-active')
       .should('not.have.css', 'display', 'none')
-    // TODO: too specific to the implementation details.
     cy.get('@pointer-target')
       .pointermoveBy({ dX: -3 * cellWidth })
     cy.get('.drop-row-area')
@@ -171,7 +165,6 @@ describe('With a pattern row editor', function () {
     cy.percySnapshot(`${testTitle()} [at pointermove]`)
     cy.get('@pointer-target')
       .pointer('up')
-    // TODO: too specific to the implementation details.
     cy.get('g.amidz-row')
       .should('have.length', 1)
     cy.percySnapshot(`${testTitle()} [at pointerup]`)

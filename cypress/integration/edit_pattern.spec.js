@@ -74,14 +74,20 @@ describe('With a pattern editor', function () {
       .deleteAmidzDatabase()
   })
 
+  it('The editor selects the row at the index 0 at first', function () {
+    cy.get('g[data-row-index=0]')
+      .should('have.class', 'edited-row')
+  })
+
   it('A designer clicks on a row to edit it', function () {
-    cy.get('.rendered-row .row-selection-layer')
-      .first()
+    cy.get('g[data-row-index=1]')
+      .as('row-to-edit')
+      .should('not.have.class', 'edited-row')
+    cy.get('g[data-row-index=1] .row-selection-layer')
       .click()
     cy.percySnapshot(`${testTitle()} [at click]`)
-    // TODO: too specific to the current implementation.
-    cy.get('g.edited-row use')
-      .should('have.length', 1)
+    cy.get('@row-to-edit')
+      .should('have.class', 'edited-row')
   })
 
   it('A designer adds a row by clicking the add row button', function () {
@@ -96,9 +102,10 @@ describe('With a pattern editor', function () {
       .pointer('up')
     cy.get('@button')
       .should('not.have.class', 'is-pressed')
+    cy.get('g[data-row-index=2]')
+      .should('have.class', 'edited-row')
     cy.get('g.edited-row .amidz-symbol')
       .should('have.length', 1)
-    // TODO: too specific to the current implementation.
     cy.get('g.amidz-row')
       .should('have.length', 3)
     cy.percySnapshot(`${testTitle()} [at pointerup]`)
@@ -114,7 +121,6 @@ describe('With a pattern editor', function () {
     cy.percySnapshot(`${testTitle()} [at pointermove]`)
     cy.get('@pointer-target')
       .pointer('up')
-    // TODO: too specific to the current implementation.
     cy.get('g.amidz-row')
       .should('have.length', 2)
   })
@@ -125,7 +131,6 @@ describe('With a pattern editor', function () {
       .pointer('cancel')
     cy.get('g.add-row-button')
       .should('not.have.class', 'is-pressed')
-    // TODO: too specific to the implementation details.
     cy.get('g.amidz-row')
       .should('have.length', 2)
     cy.percySnapshot(`${testTitle()} [at pointercancel]`)
