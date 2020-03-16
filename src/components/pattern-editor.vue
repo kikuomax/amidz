@@ -56,6 +56,11 @@ import PatternRowRenderer from '@components/pattern-row-renderer'
  * [PatternRowRenderer]{@linkcode module:components.PatternRowRenderer}
  * and [PatternRowEditor]{@linkcode module:components.PatternRowEditor}.
  *
+ * The first row is selected for editing af first.
+ *
+ * To facilitate testing, every row has an attribute `data-row-index` that
+ * represents the index of the row.
+ *
  * @namespace PatternEditor
  *
  * @vue-prop {Number} [columnWidth=50]
