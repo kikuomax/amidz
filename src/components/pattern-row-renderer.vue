@@ -107,6 +107,6 @@ export default {
   stroke-width: 1;
   stroke-dasharray: 2 2;
   fill: white;
-  fill-opacity: 1.0;
+  fill-opacity: 0.0;
 }
 </style>

@@ -13,7 +13,12 @@
         <img :src="symbolPath(symbolToPlace)">
       </button>
     </div>
+    <!--
+      Since Buefy v0.8.13, it conceals `is-active`.
+      Use `v-show` instead.
+    -->
     <div
+      v-show="isDropdownActive"
       id="symbol-picker-dropdown"
       class="dropdown-menu"
       role="menu"

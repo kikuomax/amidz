@@ -16,6 +16,7 @@
         :column-width="columnWidth"
         :row-height="rowHeight"
         :is-edited="false"
+        :data-row-index="rowIndex"
         @selecting-row="onSelectingRow(rowIndex)"
       />
       <pattern-row-editor
@@ -25,9 +26,11 @@
         :column-width="columnWidth"
         :row-height="rowHeight"
         :is-edited="true"
+        :data-row-index="editedRowIndex"
         @placing-symbol="onPlacingSymbol(editedRowIndex, $event)"
         @setting-column-count="onSettingColumnCount(editedRowIndex, $event)"
         @deleting-row="onDeletingRow(editedRowIndex)"
+        @moving-row="onMovingRow(editedRowIndex, $event)"
       />
     </g>
   </g>
@@ -48,6 +51,15 @@ import PatternRowRenderer from '@components/pattern-row-renderer'
 
 /**
  * Vue component representing a pattern editor.
+ *
+ * This component consists of
+ * [PatternRowRenderer]{@linkcode module:components.PatternRowRenderer}
+ * and [PatternRowEditor]{@linkcode module:components.PatternRowEditor}.
+ *
+ * The first row is selected for editing af first.
+ *
+ * To facilitate testing, every row has an attribute `data-row-index` that
+ * represents the index of the row.
  *
  * @namespace PatternEditor
  *
@@ -112,14 +124,15 @@ export default {
       'appendNewRow',
       'deleteRow',
       'setColumnCount',
+      'setRowPosition',
       'setSymbolAt'
     ]),
     ...mapActions('pattern', [
       'saveCurrentPattern'
     ]),
     rowTransform (rowIndex) {
-      const y = this.patternHeight - ((rowIndex + 1) * this.rowHeight)
-      return `translate(0, ${y})`
+      const { left, top } = this.rows[rowIndex].position
+      return `translate(${left}, ${top})`
     },
     onPlacingSymbol (rowIndex, { columnIndex, symbol }) {
       if (process.env.NODE_ENV !== 'production') {
@@ -160,6 +173,17 @@ export default {
       }
       this.deleteRow({ rowIndex })
       this.editedRowIndex = -1
+      // TODO: there should be better place to trigger saving data
+      this.saveCurrentPattern()
+    },
+    onMovingRow (rowIndex, { dX, dY }) {
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('[PatternEditor]', `moving row ${rowIndex}`, dX, dY)
+      }
+      let { left, top } = this.rows[rowIndex].position
+      left += dX
+      top += dY
+      this.setRowPosition({ rowIndex, left, top })
       // TODO: there should be better place to trigger saving data
       this.saveCurrentPattern()
     },

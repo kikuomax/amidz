@@ -77,7 +77,6 @@ module.exports = {
     ]),
     new WorkboxPlugin.InjectManifest({
       swSrc: './src/service-worker.js',
-      importWorkboxFrom: 'local',
       exclude: [
         // excludes desktop icons.
         /icon-.*\.png$/

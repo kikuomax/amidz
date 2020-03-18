@@ -1,8 +1,62 @@
+import version2 from '../../src/db/version2'
+
 describe('With a pattern editor', function () {
   const cellWidth = 50
   const cellHeight = 50
 
   beforeEach(function () {
+    // populates a test database.
+    // database population must be done before the page is opened.
+    cy.window()
+      .openAmidzDatabase()
+      .then(db => {
+        return new Cypress.Promise((resolve, reject) => {
+          // puts a test pattern
+          const transaction = db.transaction('pattern', 'readwrite')
+          transaction.oncomplete = () => {
+            // just to monitor the progress
+            expect(true, 'database prepared').to.be.true
+            resolve()
+          }
+          transaction.onerror = () => {
+            reject(new Error('failed to prepare a database'))
+          }
+          const patternStore = transaction.objectStore('pattern')
+          patternStore.put({
+            name: '$current',
+            rows: [
+              {
+                position: {
+                  left: 0,
+                  top: 50
+                },
+                columns: [
+                  {
+                    symbolId: 'test-symbol'
+                  },
+                  {
+                    symbolId: 'test-symbol'
+                  },
+                  {
+                    symbolId: 'test-symbol2'
+                  }
+                ]
+              },
+              {
+                position: {
+                  left: 0,
+                  top: 0
+                },
+                columns: [
+                  {
+                    symbolId: 'test-symbol'
+                  }
+                ]
+              }
+            ]
+          })
+        })
+      })
     cy.visit('/')
     // waits until the editor container gets ready.
     cy.get('.editor-container')
@@ -17,28 +71,23 @@ describe('With a pattern editor', function () {
   afterEach(function () {
     // flushes AmidzDatabase
     cy.window()
-      .then(window => {
-        expect(window).to.exist
-        return new Cypress.Promise((resolve, reject) => {
-          const request = window.indexedDB.deleteDatabase('AmidzDatabase')
-          request.onsuccess = () => {
-            resolve()
-          }
-          request.onerror = () => {
-            reject(new Error('failed to flush AmidzDatabase'))
-          }
-        })
-      })
+      .deleteAmidzDatabase()
+  })
+
+  it('The editor selects the row at the index 0 at first', function () {
+    cy.get('g[data-row-index=0]')
+      .should('have.class', 'edited-row')
   })
 
   it('A designer clicks on a row to edit it', function () {
-    cy.get('.rendered-row .row-selection-layer')
-      .first()
+    cy.get('g[data-row-index=1]')
+      .as('row-to-edit')
+      .should('not.have.class', 'edited-row')
+    cy.get('g[data-row-index=1] .row-selection-layer')
       .click()
     cy.percySnapshot(`${testTitle()} [at click]`)
-    // TODO: too specific to the current implementation.
-    cy.get('g.edited-row use')
-      .should('have.length', 1)
+    cy.get('@row-to-edit')
+      .should('have.class', 'edited-row')
   })
 
   it('A designer adds a row by clicking the add row button', function () {
@@ -53,9 +102,10 @@ describe('With a pattern editor', function () {
       .pointer('up')
     cy.get('@button')
       .should('not.have.class', 'is-pressed')
+    cy.get('g[data-row-index=2]')
+      .should('have.class', 'edited-row')
     cy.get('g.edited-row .amidz-symbol')
       .should('have.length', 1)
-    // TODO: too specific to the current implementation.
     cy.get('g.amidz-row')
       .should('have.length', 3)
     cy.percySnapshot(`${testTitle()} [at pointerup]`)
@@ -71,7 +121,6 @@ describe('With a pattern editor', function () {
     cy.percySnapshot(`${testTitle()} [at pointermove]`)
     cy.get('@pointer-target')
       .pointer('up')
-    // TODO: too specific to the current implementation.
     cy.get('g.amidz-row')
       .should('have.length', 2)
   })
@@ -82,7 +131,6 @@ describe('With a pattern editor', function () {
       .pointer('cancel')
     cy.get('g.add-row-button')
       .should('not.have.class', 'is-pressed')
-    // TODO: too specific to the implementation details.
     cy.get('g.amidz-row')
       .should('have.length', 2)
     cy.percySnapshot(`${testTitle()} [at pointercancel]`)
