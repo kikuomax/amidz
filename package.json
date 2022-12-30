@@ -52,7 +52,7 @@
     "jsdoc-vuejs": "^3.0.8",
     "jsdom": "^16.2.1",
     "jsdom-global": "^3.0.2",
-    "mocha": "^7.1.0",
+    "mocha": "^10.2.0",
     "mochapack": "^1.1.13",
     "node-sass": "^4.13.1",
     "npm-upgrade": "^2.0.3",
